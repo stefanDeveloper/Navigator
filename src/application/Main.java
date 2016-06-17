@@ -25,7 +25,7 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-        IParser parser = new Parser();
+        IParser parser = new yParser();
         generated.Osm test = (generated.Osm) parser.parseFile(new File("Testdata/Ausschnitt_StuttgartLeonberg"));
 		launch(args);
 	}
