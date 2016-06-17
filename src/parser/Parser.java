@@ -1,5 +1,8 @@
 package parser;
 
+
+import generated.Osm;
+
 import java.io.File;
 
 import javax.xml.bind.JAXBContext;
