@@ -1,9 +1,13 @@
 package application;
-	
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import parser.IParser;
+import parser.Parser;
+
+import java.io.File;
 
 
 public class Main extends Application {
@@ -21,6 +25,8 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+        IParser parser = new Parser();
+        generated.Osm test = (generated.Osm) parser.parseFile(new File("Testdata/Ausschnitt_StuttgartLeonberg"));
 		launch(args);
 	}
 }
