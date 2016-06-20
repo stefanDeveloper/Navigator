@@ -1,4 +1,4 @@
-package parser;
+package dhbw.navigator.parser;
 
 import java.io.File;
 

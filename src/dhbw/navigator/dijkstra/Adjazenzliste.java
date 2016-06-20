@@ -1,4 +1,4 @@
-package dijkstra;
+package dhbw.navigator.dijkstra;
 
 public class Adjazenzliste {
 	

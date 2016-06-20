@@ -1,12 +1,12 @@
-package parser;
+package dhbw.navigator.parser;
 
-
-import generated.Osm;
 
 import java.io.File;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+
+import dhbw.navigator.generated.Osm;
 
 public class Parser implements IParser {
 		
