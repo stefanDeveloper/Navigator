@@ -1,4 +1,4 @@
-package dijkstra;
+package dhbw.navigator.dijkstra;
 
 import java.util.ArrayList;
 

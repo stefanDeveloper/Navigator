@@ -1,8 +1,8 @@
-package start;
+package dhbw.navigator.start;
 
 import java.io.IOException;
-import com.application.views.RootLayoutController;
-import io.Menufx;
+import dhbw.navigator.io.Menufx;
+import dhbw.navigator.views.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

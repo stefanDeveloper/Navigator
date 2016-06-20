@@ -1,4 +1,4 @@
-package com.application.views;
+package dhbw.navigator.views;
 
 import javafx.fxml.FXML;
 import javafx.stage.Stage;

@@ -1,17 +1,16 @@
-package io;
+package dhbw.navigator.io;
 
 import java.io.IOException;
 
-import com.application.views.InfoViewController;
-import com.application.views.MainController;
-import com.application.views.RootLayoutController;
-
+import dhbw.navigator.start.StartNavigator;
+import dhbw.navigator.views.InfoViewController;
+import dhbw.navigator.views.MainController;
+import dhbw.navigator.views.RootLayoutController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import start.StartNavigator;
 
 public class Menufx {
 	private StartNavigator startNavigator;

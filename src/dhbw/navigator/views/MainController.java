@@ -1,6 +1,6 @@
-package com.application.views;
+package dhbw.navigator.views;
 
-import io.Menufx;
+import dhbw.navigator.io.Menufx;
 
 public class MainController {
 	private Menufx menufx;

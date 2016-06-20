@@ -1,6 +1,6 @@
-package com.application.views;
+package dhbw.navigator.views;
 
-import io.Menufx;
+import dhbw.navigator.io.Menufx;
 import javafx.fxml.FXML;
 
 public class RootLayoutController {
