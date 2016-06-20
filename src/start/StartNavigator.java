@@ -10,9 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class StartNavigator extends Application{
-	private Stage primaryStage;
-	private BorderPane primaryBorder;
-	private Menufx menufx;
+	private Stage 			primaryStage;
+	private BorderPane 		primaryBorder;
+	private Menufx 			menufx;
 	
 	
 	public Stage getPrimaryStage() {
@@ -27,15 +27,16 @@ public class StartNavigator extends Application{
 	public void start (Stage primaryStage){
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Navigator");
-		this.primaryStage.setMinHeight(500);
-		this.primaryStage.setMinWidth(500);
+		this.primaryStage.setMinHeight(720);
+		this.primaryStage.setMinWidth(680);
 		this.primaryStage.setResizable(false);
 		
 		this.menufx = new Menufx();
-		this.menufx.setStart(this);
+		this.menufx.setStartNavigator(this);
 		
 		
 		this.rootLayout();
+		this.menufx.viewMainWindow();
 		
 	}
 
@@ -45,8 +46,8 @@ public class StartNavigator extends Application{
 			loader.setLocation(RootLayoutController.class.getResource("RootLayoutWindow.fxml"));
 			this.primaryBorder = (BorderPane) loader.load();
 			
-//			RootLayoutController controller = loader.getController();
-//			controller.setStage(this.primaryStage);
+			RootLayoutController controller = loader.getController();
+			controller.setMenufx(this.menufx);
 			
 			Scene scene = new Scene(this.primaryBorder);
 			this.primaryStage.setScene(scene);
