@@ -7,7 +7,7 @@ public class Node {
 	private double laenge;
 	private double breite;
 	private String label;
-	private ArrayList<Kanten> kante;
+	private ArrayList<Edge> kante;
 	private Node vorganeger;
 	private double distanz;
 	
@@ -40,11 +40,11 @@ public class Node {
 		return label;
 	}
 
-	public void setKante(ArrayList<Kanten> kante) {
+	public void setKante(ArrayList<Edge> kante) {
 		this.kante = kante;
 	}
 	
-	public ArrayList<Kanten> getKante() {
+	public ArrayList<Edge> getKante() {
 		return kante;
 	}
 	
@@ -65,10 +65,10 @@ public class Node {
 	}
 	
 	//Kante einf�gen
-	public ArrayList<Kanten> addKante(Kanten kante){
-		ArrayList<Kanten> kanten = getKante();
+	public ArrayList<Edge> addKante(Edge kante){
+		ArrayList<Edge> kanten = getKante();
 		if(kanten==null){
-			kanten = new ArrayList<Kanten>();
+			kanten = new ArrayList<Edge>();
 		}
 		kanten.add(kante);
 		return kanten;
