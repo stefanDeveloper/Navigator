@@ -1,6 +1,6 @@
 package dhbw.navigator.models;
 
-public class Kanten {
+public class Edge {
 	
 	private double distanz;
 	private String label;
