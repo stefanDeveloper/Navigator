@@ -1,13 +1,14 @@
 package dhbw.navigator.models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Node {
 
 	private String name;
 	private ArrayList<Edge> edges = new ArrayList<>();
-	private double lon;
-	private double lat;
+	private BigDecimal lon;
+	private BigDecimal lat;
 	private long id;
 
 	
@@ -37,19 +38,19 @@ public class Node {
 		return edges;
 	}
 
-	public double getLon() {
+	public BigDecimal getLon() {
 		return lon;
 	}
 
-	public void setLon(double lon) {
+	public void setLon(BigDecimal lon) {
 		this.lon = lon;
 	}
 
-	public double getLat() {
+	public BigDecimal getLat() {
 		return lat;
 	}
 
-	public void setLat(double lat) {
+	public void setLat(BigDecimal lat) {
 		this.lat = lat;
 	}
 

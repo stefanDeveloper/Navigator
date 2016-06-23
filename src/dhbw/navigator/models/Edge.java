@@ -6,9 +6,8 @@ public class Edge {
 	
 	private double distanz;
 	private String label;
-	ArrayList<Node> node = new ArrayList<Node>();
-	private long firstNodeId;
-	private long lastNodeId;
+	private Node startNode;
+	private Node endNode;
 
 	
 	//Setter and Getter
@@ -33,34 +32,20 @@ public class Edge {
 	public String getLabel(){
 		return label;
 	}
-	
-	public void setNode(ArrayList<Node> node){
-		//if(node.size() == 2){
-			this.node = node;
-		//}
-		//else
-		//{
-		//	//Error
-		//}
-	}
-	
-	public ArrayList<Node> getNode(){
-		return node;
+
+	public Node getStartNode() {
+		return startNode;
 	}
 
-	public long getFirstNodeId() {
-		return firstNodeId;
+	public void setStartNode(Node startNode) {
+		this.startNode = startNode;
 	}
 
-	public void setFirstNodeId(long firstNodeId) {
-		this.firstNodeId = firstNodeId;
+	public Node getEndNode() {
+		return endNode;
 	}
 
-	public long getLastNodeId() {
-		return lastNodeId;
-	}
-
-	public void setLastNodeId(long lastNodeId) {
-		this.lastNodeId = lastNodeId;
+	public void setEndNode(Node endNode) {
+		this.endNode = endNode;
 	}
 }

@@ -291,6 +291,15 @@ public class Osm {
         this.generator = value;
     }
 
+    public Node getNodeById(long id)
+    {
+        for(Node n: getNode())
+        {
+            if(n.getId()==id) return n;
+        }
+        return null;
+    }
+
 
     /**
      * <p>Java-Klasse f�r anonymous complex type.
@@ -612,7 +621,7 @@ public class Osm {
 
         public Boolean doesTagExist(String term)
         {
-            return getTag(term) == null;
+            return getTag(term) != null;
         }
 
 
