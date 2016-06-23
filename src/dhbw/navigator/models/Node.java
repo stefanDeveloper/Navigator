@@ -3,74 +3,61 @@ package dhbw.navigator.models;
 import java.util.ArrayList;
 
 public class Node {
+
+	private String name;
+	private ArrayList<Edge> edges = new ArrayList<>();
+	private double lon;
+	private double lat;
+	private long id;
+
 	
-	private double laenge;
-	private double breite;
-	private String label;
-	private ArrayList<Edge> kante;
-	private Node vorganeger;
-	private double distanz;
-	
-	public Node(String label){
-		this.label = label;
+	public Node(String name){
+		this.name = name;
 	}
 	
-	//Setter und Getter
-	public void setLaenge(double laenge){
-		this.laenge = laenge;
+	public void setname(String name){
+		this.name = name;
 	}
 	
-	public double getLaenge(){
-		return laenge;
-	}
-	
-	public void setBreite(double breite){
-		this.breite = breite;
-	}
-	
-	public double getBreite(){
-		return breite;
-	}
-	
-	public void setLabel(String label){
-		this.label = label;
-	}
-	
-	public String getLabel(){
-		return label;
+	public String getname(){
+		return name;
 	}
 
-	public void setKante(ArrayList<Edge> kante) {
-		this.kante = kante;
+	public void setEdges(ArrayList<Edge> edges) {
+		this.edges = edges;
 	}
 	
-	public ArrayList<Edge> getKante() {
-		return kante;
+	public ArrayList<Edge> getEdges() {
+		return edges;
 	}
 	
-	public Node getVorganeger() {
-		return vorganeger;
+	//Add edge
+	public ArrayList<Edge> addEdge(Edge edge){
+		edges.add(edge);
+		return edges;
 	}
 
-	public void setVorganeger(Node vorganeger) {
-		this.vorganeger = vorganeger;
+	public double getLon() {
+		return lon;
 	}
 
-	public double getDistanz() {
-		return distanz;
+	public void setLon(double lon) {
+		this.lon = lon;
 	}
 
-	public void setDistanz(double distanz) {
-		this.distanz = distanz;
+	public double getLat() {
+		return lat;
 	}
-	
-	//Kante einf�gen
-	public ArrayList<Edge> addKante(Edge kante){
-		ArrayList<Edge> kanten = getKante();
-		if(kanten==null){
-			kanten = new ArrayList<Edge>();
-		}
-		kanten.add(kante);
-		return kanten;
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }
