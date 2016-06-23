@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.06.17 um 11:26:16 AM CEST 
+// ï¿½nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2016.06.17 um 01:44:29 PM CEST 
 //
 
 
@@ -45,6 +45,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Osm.Node }
+     * 
+     */
+    public Osm.Node createOsmNode() {
+        return new Osm.Node();
+    }
+
+    /**
      * Create an instance of {@link Osm.Way }
      * 
      */
@@ -61,11 +69,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Osm.Node }
+     * Create an instance of {@link Osm.Node.Tag }
      * 
      */
-    public Osm.Node createOsmNode() {
-        return new Osm.Node();
+    public Osm.Node.Tag createOsmNodeTag() {
+        return new Osm.Node.Tag();
     }
 
     /**
