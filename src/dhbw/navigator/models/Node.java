@@ -1,5 +1,7 @@
 package dhbw.navigator.models;
 
+import dhbw.navigator.generated.Osm;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -9,18 +11,40 @@ public class Node {
 	private ArrayList<Edge> edges = new ArrayList<>();
 	private BigDecimal lon;
 	private BigDecimal lat;
+
+	//Autobahnkreuznummer ...
+	private String ref;
 	private long id;
+	private boolean isJunction;
+	private int junctions = 1;
 
 	
 	public Node(String name){
 		this.name = name;
 	}
-	
-	public void setname(String name){
+
+	public Node(Osm.Node node)
+	{
+		//String name = null;
+		//if(node.doesTagExist("name")) {
+		//	name = (String)node.getTag("name");
+		//}
+		this.setName((String)node.getTag("name"));
+		this.setLon(node.getLon());
+		this.setLat(node.getLat());
+		this.setId(node.getId());
+		if(node.doesTagExist("ref"))
+		{
+			this.setRef((String)node.getTag("ref"));
+			this.setIsJunction(true);
+		}
+	}
+
+	public void setName(String name){
 		this.name = name;
 	}
 	
-	public String getname(){
+	public String getName(){
 		return name;
 	}
 
@@ -60,5 +84,35 @@ public class Node {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public boolean isSameNode(Node compareNode)
+	{
+		if(compareNode.getRef()==null || this.getRef()==null) return false;
+		return (compareNode.getRef().equals(this.getRef()));
+	};
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
+	}
+
+	public boolean getIsJunction() {
+		return isJunction;
+	}
+
+	public void setIsJunction(boolean junction) {
+		isJunction = junction;
+	}
+
+	public int getJunctions() {
+		return junctions;
+	}
+
+	public void setJunctions(int junctions) {
+		this.junctions = junctions;
 	}
 }
