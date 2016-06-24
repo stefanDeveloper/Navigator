@@ -31,6 +31,11 @@ public class Edge {
         allNodes.add(endNode);
     }
 
+    public ArrayList<Node> allNodes()
+    {
+        return allNodes;
+    }
+
     /**
      * Calculates the distance between two nodes.
      * @param node1 Node one.
