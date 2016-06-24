@@ -62,7 +62,7 @@ public class Edge {
                         Math.sin(dLng/2) * Math.sin(dLng/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         float dist = (float) (earthRadius * c);
-        return dist;
+        return dist / 1000000;
     }
 
 
@@ -103,5 +103,15 @@ public class Edge {
                     "]-[" +
                     getEndNode().getName() + "]";
         }
+    }
+    
+    public Node getNeighbour(Node n){
+		if(this.getEndNode() != n)
+		{
+			return this.getEndNode();
+		}
+		else {
+			return this.getStartNode();
+		}
     }
 }

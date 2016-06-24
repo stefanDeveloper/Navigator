@@ -1,5 +1,7 @@
 package dhbw.navigator.interfaces;
 
+import java.util.ArrayList;
+
 import dhbw.navigator.models.Node;
 
 /**
@@ -7,5 +9,5 @@ import dhbw.navigator.models.Node;
  */
 public interface IDijkstra {
 
-    public void FindPath(Node start, Node end);
+    public ArrayList<Node> FindPath(Node start, Node end);
 }
