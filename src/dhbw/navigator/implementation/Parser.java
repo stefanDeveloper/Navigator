@@ -1,8 +1,6 @@
 package dhbw.navigator.implementation;
 
-
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,13 +54,14 @@ public class Parser implements IParser {
 			boolean exists = false;
 			for(Node en: extractedNodes)
 			{
-				if(isSameNode(n, en))
+				if(n.isSameNode(en))
 				{
 					for(Edge e: n.getEdges())
 					{
 						en.addEdge(e);
 					}
 					exists = true;
+					en.setJunctions((en.getJunctions()+1));
 					break;
 				}
 			}
@@ -73,12 +72,12 @@ public class Parser implements IParser {
 		return extractedNodes;
 	}
 
-	boolean isSameNode(Node node1, Node node2)
-	{
-		if(node2.getname()==null || node1.getname() == null) return false;
-		return (node1.getname().equals(node2.getname()));
-	};
-
+	/**
+	 * Finds the edges for all nodes from an osm source object.
+	 * @param pOsm Osm source object.
+	 * @param existingNodes Nodes to append the edges to.
+	 * @return The given nodes with the new edges added.
+	 */
 	ArrayList<Node> extractWays(Osm pOsm, ArrayList<Node> existingNodes)
 	{
 		ArrayList<Edge> edges = new ArrayList<>();
@@ -101,12 +100,8 @@ public class Parser implements IParser {
 					for (Node n : existingNodes) {
 						if (n.getId() == startNodeId) {
 							//Way is a start of an edge, create edge
-							Edge edge = new Edge();
-							//Start node is the node the edge appends to
-							edge.setStartNode(n);
-
-							//Create a temp node for the end node
-							edge.setEndNode(createNodeFromOsm(pOsm, endNodeId));
+							Osm.Node endNode = pOsm.getNodeById(endNodeId);
+							Edge edge = new Edge(n, new Node(endNode));
 
 							//Add the new edge to the node and to the temporary edge list
 							n.addEdge(edge);
@@ -122,11 +117,12 @@ public class Parser implements IParser {
 						for (Edge e : edges) {
 							if (e.getEndNode().getId() == startNodeId) {
 
-								e.setEndNode(createNodeFromOsm(pOsm, endNodeId));
+								Osm.Node endNode = pOsm.getNodeById(endNodeId);
+								e.addPart(new Node(endNode));
 
 								for (Node n : existingNodes) {
 									if (n.getId() == endNodeId) {
-										e.setEndNode(createNodeFromOsm(pOsm, n.getId()));
+										e.addPart(n);
 										n.addEdge(e);
 									}
 								}
@@ -147,34 +143,25 @@ public class Parser implements IParser {
 		return existingNodes;
 	}
 
-	Node createNodeFromOsm(Osm pOsm, long node)
-	{
-		Osm.Node tmpOsmNode = pOsm.getNodeById(node); //Get end node
-		String name = "Temp";
-		if(tmpOsmNode.doesTagExist("name")) {
-			name = (String)tmpOsmNode.getTag("name");
-		}
-		//name = (String)tmpOsmNode.getTag("name");
-		Node tmpNode = new Node(name);
-		tmpNode.setLon(tmpOsmNode.getLon());
-		tmpNode.setLat(tmpOsmNode.getLat());
-		tmpNode.setId(tmpOsmNode.getId());
-		return tmpNode;
-	}
 
+	/**
+	 * Extracts all valid junctions (junctions that have a reference number)
+	 * from an Osm source.
+	 * The junctions get saved in a list of nodes, containing only the name,
+	 * coordinates and reference number.
+	 * @param pOsm An osm source object.
+	 * @return A list of nodes.
+	 */
 	ArrayList<Node> extractNodes(Osm pOsm)
 	{
 		ArrayList<Node> result = new ArrayList<Node>();
 		for(Osm.Node n: pOsm.getNode())
 		{
 			Object tag = n.getTag("highway");
-			if(tag!=null && tag.equals("motorway_junction"))
+			//A node has to be a junction and needs a ref to be a valid junction!
+			if(tag!=null && tag.equals("motorway_junction") && n.doesTagExist("ref"))
 			{
-				Node newNode = new Node((String)n.getTag("name"));
-				newNode.setLat(n.getLat());
-				newNode.setLon(n.getLon());
-				newNode.setId(n.getId());
-				result.add(newNode);
+				result.add(new Node(n));
 			}
 		}
 		return result;
