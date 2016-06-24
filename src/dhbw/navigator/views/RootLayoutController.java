@@ -1,6 +1,7 @@
 package dhbw.navigator.views;
 
 import dhbw.navigator.io.Menufx;
+import dhbw.navigator.utility.UtilityViews;
 import javafx.fxml.FXML;
 
 public class RootLayoutController {
@@ -18,7 +19,7 @@ public class RootLayoutController {
 	
 	@FXML
 	private void handleInfo(){
-		this.menufx.viewInfoLabel();
+		UtilityViews.Information("Hallo");
 	}
 
 	public Menufx getMenufx() {
