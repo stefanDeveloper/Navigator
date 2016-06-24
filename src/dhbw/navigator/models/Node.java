@@ -11,6 +11,24 @@ public class Node {
 	private ArrayList<Edge> edges = new ArrayList<>();
 	private BigDecimal lon;
 	private BigDecimal lat;
+	private float shortestDistance;
+	private Node lastNode;
+
+	public Node getLastNode() {
+		return lastNode;
+	}
+
+	public void setLastNode(Node lastNode) {
+		this.lastNode = lastNode;
+	}
+
+	public float getShortestDistance() {
+		return shortestDistance;
+	}
+
+	public void setShortestDistance(float shortestDistance) {
+		this.shortestDistance = shortestDistance;
+	}
 
 	//Autobahnkreuznummer ...
 	private String ref;
@@ -114,5 +132,15 @@ public class Node {
 
 	public void setJunctions(int junctions) {
 		this.junctions = junctions;
+	}
+	
+	public ArrayList<Node> getNeighbours()
+	{
+		ArrayList<Node> result = new ArrayList<>();
+		for(Edge e : this.getEdges())
+		{
+			result.add(e.getNeighbour(this));
+		}
+		return result;
 	}
 }
