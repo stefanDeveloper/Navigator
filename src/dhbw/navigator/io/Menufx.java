@@ -1,6 +1,7 @@
 package dhbw.navigator.io;
 
 import java.io.IOException;
+
 import dhbw.navigator.start.StartNavigator;
 import dhbw.navigator.views.MainController;
 import dhbw.navigator.views.RootLayoutController;
@@ -24,9 +25,15 @@ public class Menufx {
 			MainController menuController = loader.getController();
 			menuController.setMenufx(this);
 			
+			
 			this.startNavigator.getPrimaryBorder().setCenter(pane);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void drawMap(){
+		
+		
 	}
 }

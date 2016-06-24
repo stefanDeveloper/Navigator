@@ -13,6 +13,7 @@ public class StartNavigator extends Application{
 	private Stage 			primaryStage;
 	private BorderPane 		primaryBorder;
 	private Menufx 			menufx;
+
 	
 	
 	public Stage getPrimaryStage() {
@@ -58,8 +59,6 @@ public class StartNavigator extends Application{
 	}
 
 	public static void main (String[] args){
-//		IParser parser = new Parser();
-//      generated.Osm test = (generated.Osm) parser.parseFile(new File("Testdata/Ausschnitt_StuttgartLeonberg"));
 		launch(args);
 	}
 }
