@@ -59,8 +59,7 @@ public class MainController extends Thread {
 		ArrayList<Node> nodes = this.parser.getNodes(test);
 		this.gc = mapView.getGraphicsContext2D();
 		this.map = new Map(gc, nodes);
-		
-		UtilityViews.runTask(10, this.primaryStage);
+		UtilityViews.runTask(1000, this.primaryStage);
 		
 		this.map.drawMap();
 		

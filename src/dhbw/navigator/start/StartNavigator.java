@@ -30,7 +30,7 @@ public class StartNavigator extends Application{
 		this.primaryStage.setTitle("Navigator");
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
-		this.primaryStage.setResizable(false);
+//		this.primaryStage.setResizable(false);
 		
 		this.menufx = new Menufx();
 		this.menufx.setStartNavigator(this);
