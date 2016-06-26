@@ -1,7 +1,5 @@
 package dhbw.navigator.models;
 
-import dhbw.navigator.generated.Osm;
-
 import java.util.ArrayList;
 
 public class Edge {

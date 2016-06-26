@@ -38,6 +38,7 @@ public class StartNavigator extends Application{
 		
 		this.rootLayout();
 		this.menufx.viewMainWindow();
+		this.menufx.viewRouteWindow();
 		
 	}
 

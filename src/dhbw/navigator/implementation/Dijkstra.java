@@ -3,8 +3,6 @@ package dhbw.navigator.implementation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import dhbw.navigator.generated.Osm;
 import dhbw.navigator.interfaces.IDijkstra;
 import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
