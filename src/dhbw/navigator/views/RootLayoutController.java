@@ -19,7 +19,13 @@ public class RootLayoutController {
 	
 	@FXML
 	private void handleInfo(){
-		UtilityViews.Information("Hallo");
+		UtilityViews.Information("Navigator \n"
+				+ "Gruppenprojekt Programmieren\n"
+				+ "2. Semester\n"
+				+ "Manuela Leopold\n"
+				+ "Markus Menrath\n"
+				+ "Stefan Machmeier\n"
+				+ "Konrad Müller");
 	}
 
 	public Menufx getMenufx() {

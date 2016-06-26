@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import np.com.ngopal.control.AutoFillTextBox?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+
 
 <AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dhbw.navigator.views.RouteController">
    <children>
@@ -20,10 +22,10 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="startLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <AutoFillTextBox fx:id="startLabel" promptText="z.B. Ort" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Start setzten" GridPane.rowIndex="1" />
             <Label text="Ziel setzen" GridPane.rowIndex="2" />
-            <TextField fx:id="aimLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <AutoFillTextBox fx:id="aimLabel" promptText="z.B. Ort" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label prefHeight="17.0" prefWidth="141.0" text="Route wählen" />
             <Button mnemonicParsing="false" onAction="#handleOk" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
