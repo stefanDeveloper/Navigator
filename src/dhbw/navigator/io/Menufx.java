@@ -1,21 +1,22 @@
 package dhbw.navigator.io;
 
 import java.io.IOException;
+
 import dhbw.navigator.start.StartNavigator;
 import dhbw.navigator.views.MainController;
 import dhbw.navigator.views.RootLayoutController;
 import dhbw.navigator.views.RouteController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Menufx {
 	private StartNavigator startNavigator;
-	private Label startLabel; 
-	private Label aimLabel;
+	private TextField startLabel; 
+	private TextField aimLabel;
 	
 	public void setStartNavigator(StartNavigator startNavigator) {
 		this.startNavigator = startNavigator;
@@ -43,13 +44,15 @@ public class Menufx {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(RootLayoutController.class.getResource("RouteWindow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
+			Stage stage = new Stage();
 			
 			RouteController routeController = loader.getController();
 			routeController.setMenufx(this);
 			routeController.setAimLabel(this.aimLabel);
 			routeController.setStartLabel(this.startLabel);
+			routeController.setStageRoute(stage);
 			
-			Stage stage = new Stage();
+			
 			stage.centerOnScreen();
 			stage.initModality(Modality.WINDOW_MODAL);
 			

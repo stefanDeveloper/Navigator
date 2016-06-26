@@ -4,6 +4,8 @@ import dhbw.navigator.io.Menufx;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class RouteController {
 	
@@ -16,10 +18,20 @@ public class RouteController {
 	private Label cancelButton;
 	
 	@FXML
-	private Label startLabel; 
+	private TextField startLabel; 
 	
 	@FXML
-	private Label aimLabel;
+	private TextField aimLabel;
+	
+	private Stage stageRoute;
+
+	public Stage getStageRoute() {
+		return stageRoute;
+	}
+
+	public void setStageRoute(Stage stageRoute) {
+		this.stageRoute = stageRoute;
+	}
 
 	public Menufx getMenufx() {
 		return this.menufx;
@@ -29,19 +41,19 @@ public class RouteController {
 		this.menufx = menufx;
 	}
 
-	public Label getStartLabel() {
+	public TextField getStartLabel() {
 		return startLabel;
 	}
 
-	public void setStartLabel(Label startLabel) {
+	public void setStartLabel(TextField startLabel) {
 		this.startLabel = startLabel;
 	}
 
-	public Label getAimLabel() {
+	public TextField getAimLabel() {
 		return aimLabel;
 	}
 
-	public void setAimLabel(Label aimLabel) {
+	public void setAimLabel(TextField aimLabel) {
 		this.aimLabel = aimLabel;
 	}
 	@FXML
@@ -56,7 +68,7 @@ public class RouteController {
 	
 	@FXML
 	private void handleCancel(){
-		System.exit(0);
+		this.stageRoute.close();
 	}
 
 }
