@@ -14,10 +14,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class UtilityViews {
-	
-
-	
-	
 	public static void Error(String error){
 		Alert alert = new Alert(AlertType.ERROR);
 //		alert.getDialogPane().getScene().getStylesheets().add("com/tool/views/application.css");

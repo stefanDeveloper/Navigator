@@ -12,13 +12,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import np.com.ngopal.control.AutoFillTextBox;
 
 public class Menufx {
-	private Stage 			primaryStage;
-	private AutoFillTextBox<?>		startLabel; 
-	private AutoFillTextBox<?>		aimLabel;
-	private StartNavigator startNavigator;
+	private Stage 						primaryStage;
+	private TextField					startLabel; 
+	private TextField					aimLabel;
+	private StartNavigator 				startNavigator;
 		
 	public void setStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -54,21 +53,18 @@ public class Menufx {
 			AnchorPane pane = (AnchorPane) loader.load();
 			
 			Stage stage = new Stage();
-			stage.setResizable(false);
+//			stage.setResizable(false);
 			RouteController routeController = loader.getController();
 			routeController.setMenufx(this);
-			routeController.setAimLabel(this.aimLabel);
-			routeController.setStartLabel(this.startLabel);
+			this.aimLabel = routeController.getAimLabel();
+			this.startLabel = routeController.getStartLabel();
 			routeController.setStageRoute(stage);
-			
-			
 			
 			stage.centerOnScreen();
 			stage.initModality(Modality.WINDOW_MODAL);
 			
 			Scene scene = new Scene(pane);
             stage.setScene(scene);
-            scene.getStylesheets().add(getClass().getResource("control.css").toExternalForm());
 			stage.showAndWait();
 			
 		} catch (IOException e) {
