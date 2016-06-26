@@ -1,6 +1,7 @@
 package dhbw.navigator.start;
 
 import java.io.IOException;
+
 import dhbw.navigator.io.Menufx;
 import dhbw.navigator.views.RootLayoutController;
 import javafx.application.Application;
@@ -13,7 +14,6 @@ public class StartNavigator extends Application{
 	private Stage 			primaryStage;
 	private BorderPane 		primaryBorder;
 	private Menufx 			menufx;
-
 	
 	
 	public Stage getPrimaryStage() {
@@ -34,6 +34,7 @@ public class StartNavigator extends Application{
 		
 		this.menufx = new Menufx();
 		this.menufx.setStartNavigator(this);
+		this.menufx.setStage(this.primaryStage);
 		
 		
 		this.rootLayout();

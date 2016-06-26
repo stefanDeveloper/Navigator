@@ -13,9 +13,12 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressIndicator;
+import javafx.stage.Stage;
 
 public class MainController extends Thread {
-	private Menufx menufx;
+	private Menufx 	menufx;
+	private IParser	parser;
+	private Map 	map;
 	
 	@FXML
 	private Canvas mapView;
@@ -24,6 +27,7 @@ public class MainController extends Thread {
 	ProgressIndicator progressIndicator;
 
 	private GraphicsContext gc;
+	private Stage primaryStage;
 
 	public Canvas getMap() {
 		return this.mapView;
@@ -41,18 +45,31 @@ public class MainController extends Thread {
 		this.menufx = menufx;
 	}
 	
+	public void setStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		
+	}
+	
 	
 	
 	@FXML
-	public void initialize(){
-		UtilityViews.runTask(100);
+	public void initialize(){ //Thread
+		this.parser =  new Parser();
+		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
+		ArrayList<Node> nodes = this.parser.getNodes(test);
 		this.gc = mapView.getGraphicsContext2D();
-		IParser parser = new Parser();
-		Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> nodes = parser.getNodes(test);
-		Thread map = new Thread(Map.drawMap(gc, nodes));
+		this.map = new Map(gc, nodes);
 		
-		map.start();
+		UtilityViews.runTask(10, this.primaryStage);
+		
+		this.map.drawMap();
+		
+		
+		
+
+		
 		
 	}
+
+	
 }

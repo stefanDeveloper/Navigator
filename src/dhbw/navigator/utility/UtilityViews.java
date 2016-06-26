@@ -6,11 +6,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -46,15 +45,8 @@ public class UtilityViews {
 		
 	}
 	
-	public static void LoadingBar(int time){
-		ProgressIndicator[] pins = new ProgressIndicator[time];
-		for (int i = 0; i < time; i++) {
-            final ProgressIndicator pin = pins[i] = new ProgressIndicator();
-            pin.setProgress(i);
-        }		
-	}
 	
-	 public static void runTask(int time) {
+	 public static void runTask(int time, Stage stage) {
 	        final double wndwWidth = 300.0d;
 	        Label updateLabel = new Label("Running tasks...");
 	        updateLabel.setPrefWidth(wndwWidth);
@@ -97,6 +89,7 @@ public class UtilityViews {
 
 	        taskUpdateStage.show();
 	        new Thread(longTask).start();
+	        
 	    }
 
 }

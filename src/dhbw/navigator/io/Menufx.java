@@ -12,16 +12,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import np.com.ngopal.control.AutoFillTextBox;
 
 public class Menufx {
+	private Stage 			primaryStage;
+	private AutoFillTextBox<?>		startLabel; 
+	private AutoFillTextBox<?>		aimLabel;
 	private StartNavigator startNavigator;
-	private TextField startLabel; 
-	private TextField aimLabel;
+		
+	public void setStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
 	
+
 	public void setStartNavigator(StartNavigator startNavigator) {
 		this.startNavigator = startNavigator;
 	}
-	
+
 
 	public void viewMainWindow(){
 		try {
@@ -29,8 +36,9 @@ public class Menufx {
 			loader.setLocation(RootLayoutController.class.getResource("MainWindow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
 			
-			MainController menuController = loader.getController();
-			menuController.setMenufx(this);
+			MainController mainController = loader.getController();
+			mainController.setMenufx(this);
+			mainController.setStage(this.primaryStage);		
 			
 			
 			this.startNavigator.getPrimaryBorder().setCenter(pane);
@@ -44,8 +52,9 @@ public class Menufx {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(RootLayoutController.class.getResource("RouteWindow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
-			Stage stage = new Stage();
 			
+			Stage stage = new Stage();
+			stage.setResizable(false);
 			RouteController routeController = loader.getController();
 			routeController.setMenufx(this);
 			routeController.setAimLabel(this.aimLabel);
@@ -53,12 +62,13 @@ public class Menufx {
 			routeController.setStageRoute(stage);
 			
 			
+			
 			stage.centerOnScreen();
 			stage.initModality(Modality.WINDOW_MODAL);
 			
 			Scene scene = new Scene(pane);
             stage.setScene(scene);
-            
+            scene.getStylesheets().add(getClass().getResource("control.css").toExternalForm());
 			stage.showAndWait();
 			
 		} catch (IOException e) {
