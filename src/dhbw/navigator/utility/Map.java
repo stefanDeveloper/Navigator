@@ -1,13 +1,10 @@
 package dhbw.navigator.utility;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
 import javafx.scene.canvas.GraphicsContext;
-
-import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 public class Map {
 	
@@ -36,7 +33,7 @@ public class Map {
 		double latDif = lat2.subtract(lat1).doubleValue(); //Breitenunterschied
 		double lonDif = lon2.subtract(lon1).doubleValue(); //Höhenunterschied
 
-		//Fenstergröße
+		//Screensize
 		int xSize = 680;
 		int ySize = 720;
 

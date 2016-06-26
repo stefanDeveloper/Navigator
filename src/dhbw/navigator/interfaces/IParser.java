@@ -1,11 +1,9 @@
 package dhbw.navigator.interfaces;
 
-import dhbw.navigator.generated.Osm;
-import dhbw.navigator.models.Node;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import dhbw.navigator.generated.Osm;
+import dhbw.navigator.models.Node;
 
 public interface IParser {
 	
