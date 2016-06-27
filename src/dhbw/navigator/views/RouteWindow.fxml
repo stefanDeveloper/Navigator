@@ -20,17 +20,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="startLabel" onKeyTyped="#handleTypIn" promptText="z.B. Ort" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <contextMenu>
-                  <ContextMenu fx:id="entriesPopup">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-                    </items>
-                  </ContextMenu>
-               </contextMenu></TextField>
             <Label text="Start setzten" GridPane.rowIndex="1" />
             <Label text="Ziel setzen" GridPane.rowIndex="2" />
-            <TextField fx:id="aimLabel" promptText="z.B. Ort" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label prefHeight="17.0" prefWidth="141.0" text="Route wählen" />
             <Button mnemonicParsing="false" onAction="#handleOk" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
@@ -42,6 +33,34 @@
                   <Insets left="40.0" right="40.0" />
                </GridPane.margin>
             </Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="startTextField" promptText="z.B. Ort">
+                     <contextMenu>
+                        <ContextMenu fx:id="entriesPopupStart">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </TextField>
+                  <Button fx:id="startButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleButtonStart" prefHeight="20.0" prefWidth="10.0" text="X" visible="false" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="finishTextField" promptText="z.B. Ort">
+                     <contextMenu>
+                        <ContextMenu fx:id="entriesPopupAim">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </TextField>
+                  <Button fx:id="finishButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleButtonFinish" prefHeight="20.0" prefWidth="10.0" text="X" visible="false" />
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets left="5.0" right="5.0" />
