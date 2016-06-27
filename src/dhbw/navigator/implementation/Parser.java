@@ -1,6 +1,6 @@
 package dhbw.navigator.implementation;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +14,9 @@ import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
 
 public class Parser implements IParser {
-		
+
+	static String path = System.getProperty("user.home") + "\\desktop\\map.ser";
+
 	@Override
 	public Object parseFile(File pFile) {
 		Osm customer = new Osm();
@@ -40,10 +42,63 @@ public class Parser implements IParser {
 
 	public ArrayList<Node> getNodes(Osm pOsm)
 	{
+		long startTime = System.nanoTime();
 		ArrayList<Node> result = extractNodes(pOsm);
-		result = extractWays(pOsm, result);
 		result = merge(result);
+		result = extractWays(pOsm, result);
+		printDuration(startTime, "Node parsing");
 		return result;
+	}
+
+	@Override
+	public ArrayList<Node> deserialize() {
+		long startTime = System.nanoTime();
+
+		ArrayList<Node> nodes;
+		File f = new File(path);
+		if(f.exists() && !f.isDirectory()) {
+			f.delete();
+		}
+
+		try{
+
+			FileInputStream fin = new FileInputStream(path);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			nodes = (ArrayList<Node>) ois.readObject();
+			ois.close();
+			printDuration(startTime, "Deserialisation");
+			return nodes;
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return null;
+		}
+
+
+	}
+
+	void printDuration(long startTime, String description)
+	{
+		long endTime = System.nanoTime();
+		long duration = (  ((endTime - startTime)/1000000));
+		System.out.println("TIMER: " + description + " ,duration: " +duration + " ms.");
+	}
+
+	@Override
+	public void serialize(ArrayList<Node> nodes) {
+		long startTime = System.nanoTime();
+		try{
+
+			FileOutputStream fout = new FileOutputStream(path);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(nodes);
+			oos.close();
+			System.out.println("Serialized map");
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		printDuration(startTime, "Serialisation");
 	}
 
 	ArrayList<Node> merge(ArrayList<Node> existingNodes)
@@ -82,67 +137,88 @@ public class Parser implements IParser {
 	{
 		ArrayList<Edge> edges = new ArrayList<>();
 
-		List<Osm.Way> way;
-		boolean somethingRemoved = true;
-		while ((way = pOsm.getWay()).size()>0 && somethingRemoved)
-		{
-			somethingRemoved = false;
-			for (int i = 0; i < way.size(); i++) {
-				Osm.Way w = way.get(i);
-				if (w.getTag("highway").equals("motorway")) {
-					List<Osm.Way.Nd> nds = w.getNd();
-					long startNodeId = nds.get(0).getRef();
-					long endNodeId = nds.get(nds.size() - 1).getRef();
+		List<Osm.Way> way = pOsm.getWay();
 
-					boolean finished = false;
+		long startNodeId;
+		long endNodeId;
+		int length = way.size();
 
-					//Check if way is the start of an edge
-					for (Node n : existingNodes) {
-						if (n.getId() == startNodeId) {
-							//Way is a start of an edge, create edge
-							Osm.Node endNode = pOsm.getNodeById(endNodeId);
-							Edge edge = new Edge(n, new Node(endNode));
+		for (int i = 0; i < length; i++) {
 
-							//Add the new edge to the node and to the temporary edge list
-							n.addEdge(edge);
-							edges.add(edge);
+			Osm.Way w = way.get(i);
+			if (w.getTag("highway").equals("motorway")) {
+				List<Osm.Way.Nd> nds = w.getNd();
+				startNodeId = nds.get(0).getRef();
+				endNodeId = nds.get(nds.size() - 1).getRef();
 
-							finished = true;
-							break;
-						}
+				//Check if way is the start of an edge
+				for (Node n : existingNodes) {
+					if (n.getId() == startNodeId) {
+						//Way is a start of an edge, create edge
+						Osm.Node endNode = pOsm.getNodeById(endNodeId);
+						Edge edge = new Edge(n, new Node(endNode));
 
-					}
-					if(!finished)
-					{
-						for (Edge e : edges) {
-							if (e.getEndNode().getId() == startNodeId) {
+						//Add the new edge to the node and to the temporary edge list
+						n.addEdge(edge);
+						edges.add(edge);
 
-								Osm.Node endNode = pOsm.getNodeById(endNodeId);
-								e.addPart(new Node(endNode));
-
-								for (Node n : existingNodes) {
-									if (n.getId() == endNodeId) {
-										e.addPart(n);
-										n.addEdge(e);
-									}
-								}
-								finished = true;
-								break;
-							}
-						}
-					}
-					if(finished)
-					{
-						pOsm.getWay().remove(w);
-						somethingRemoved = true;
+						//Remove from list
+						way.remove(i);
+						length--;
 						break;
 					}
 				}
 			}
 		}
+
+		int counter = 0;
+		int edgeCounter = 0;
+		int loopCounter = 0;
+		boolean somethingRemoved = true;
+
+		while(somethingRemoved){
+		//while ((way = pOsm.getWay()).size()>0 && somethingRemoved) {
+			somethingRemoved = false;
+			edgeCounter = 0;
+			for (int i = 0; i < length; i++) {
+				counter++;
+				int blub = counter % 100000;
+				if (blub == 0) System.out.println("Count: " + counter +
+						"; Remaining: " + pOsm.getWay().size() +
+						"; Loops: " + loopCounter);
+
+				List<Osm.Way.Nd> nds = way.get(i).getNd();
+				startNodeId = nds.get(0).getRef();
+
+				for (Edge e : edges) {
+					if (e.getEndNode().getId() == startNodeId) {
+						endNodeId = nds.get(nds.size()-1).getRef();
+						Osm.Node endNode = pOsm.getNodeById(endNodeId);
+						e.addPart(new Node(endNode));
+
+						for (Node n : existingNodes) {
+							if (n.getId() == endNodeId) {
+								e.addPart(n);
+								n.addEdge(e);
+							}
+						}
+
+						length--;
+						way.remove(i);
+						edgeCounter ++;
+						somethingRemoved = true;
+						break;
+					}
+					if(edgeCounter == edges.size()){
+						loopCounter++;
+						break;
+					}
+				}
+			}
+		}
+		System.out.println("GENAU");
 		return existingNodes;
 	}
-
 
 	/**
 	 * Extracts all valid junctions (junctions that have a reference number)
@@ -159,7 +235,7 @@ public class Parser implements IParser {
 		{
 			Object tag = n.getTag("highway");
 			//A node has to be a junction and needs a ref to be a valid junction!
-			if(tag!=null && tag.equals("motorway_junction") && n.doesTagExist("ref"))
+			if(tag!=null && n.doesTagExist("name")&& tag.equals("motorway_junction") && n.doesTagExist("ref"))
 			{
 				result.add(new Node(n));
 			}

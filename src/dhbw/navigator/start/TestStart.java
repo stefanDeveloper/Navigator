@@ -20,8 +20,12 @@ public class TestStart extends Application {
 
     public static void main (String[] args){
  		IParser parser = new Parser();
-        Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
+        String name = "south_mid_germany.xml";
+        //name = "export.xml";
+        Osm test = (Osm) parser.parseFile(new File("Testdata/" + name));
         ArrayList<Node> nodes = parser.getNodes(test);
+        parser.serialize(nodes);
+        ArrayList<Node> deserializedData = parser.deserialize();
         IDijkstra d = new Dijkstra();
         ArrayList<Node> nodeList = d.FindPath(nodes.get(0), nodes.get(2));
         launch(args);

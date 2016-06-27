@@ -55,19 +55,26 @@ public class MainController extends Thread {
 	@FXML
 	public void initialize(){ //Thread
 		this.parser =  new Parser();
-		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> nodes = this.parser.getNodes(test);
+		ArrayList<Node> nodes;
+
+		String importXmlPath = "Testdata/south_mid_germany.xml";
+
+		//Set as true to import data (Needed at first start)
+		boolean reimport = false;
+		if(reimport)
+		{
+			Osm test = (Osm) this.parser.parseFile(new File(importXmlPath));
+			nodes = this.parser.getNodes(test);
+			parser.serialize(nodes);
+		}
+
+
+		nodes = parser.deserialize();
+
 		this.gc = mapView.getGraphicsContext2D();
 		this.map = new Map(gc, nodes);
 		UtilityViews.runTask(1000, this.primaryStage);
-		
 		this.map.drawMap();
-		
-		
-		
-
-		
-		
 	}
 
 	
