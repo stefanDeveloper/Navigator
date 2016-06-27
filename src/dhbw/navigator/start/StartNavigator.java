@@ -1,7 +1,16 @@
 package dhbw.navigator.start;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import dhbw.navigator.generated.Osm;
+import dhbw.navigator.implementation.Parser;
+import dhbw.navigator.interfaces.IParser;
 import dhbw.navigator.io.Menufx;
+import dhbw.navigator.models.Node;
 import dhbw.navigator.views.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,10 +18,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+/**
+ * Start Application
+ * @author Stefan
+ *
+ */
 public class StartNavigator extends Application{
 	private Stage 			primaryStage;
 	private BorderPane 		primaryBorder;
 	private Menufx 			menufx;
+	private IParser			parser;
+	private SortedSet<String> nameOfJunctions;
 	
 	
 	public Stage getPrimaryStage() {
@@ -25,8 +41,10 @@ public class StartNavigator extends Application{
 	
 	@Override
 	public void start (Stage primaryStage){
+		//Initialize Stage
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Navigator");
+		//Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
 		this.primaryStage.setResizable(false);
@@ -35,14 +53,29 @@ public class StartNavigator extends Application{
 		this.menufx.setStartNavigator(this);
 		this.menufx.setStage(this.primaryStage);
 		
+		this.parser = new Parser();
+		Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
+		ArrayList<Node> node = parser.getNodes(test);
+		this.nameOfJunctions = new TreeSet<>();
 		
+		for (Node n : node) {
+			if (n.getIsJunction() == true)
+				this.nameOfJunctions.add(n.getName());
+		}
 		
+		this.menufx.setNodes(node);		
+		this.menufx.setNameOfJunctions(this.nameOfJunctions);
+		
+		//Load Views
 		this.rootLayout();
 		this.menufx.viewMainWindow();
 		this.menufx.viewRouteWindow();
 		
 	}
-
+	
+	/**
+	 * Load BorderPane
+	 */
 	public void rootLayout(){
 		try {
 			FXMLLoader loader = new FXMLLoader();

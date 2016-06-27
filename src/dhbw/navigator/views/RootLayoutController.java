@@ -3,7 +3,11 @@ package dhbw.navigator.views;
 import dhbw.navigator.io.Menufx;
 import dhbw.navigator.utility.UtilityViews;
 import javafx.fxml.FXML;
-
+/**
+ * Controller for RootLayout.fxml
+ * @author Stefan
+ *
+ */
 public class RootLayoutController {
 	private Menufx menufx;
 	
