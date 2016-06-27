@@ -11,12 +11,26 @@ public class RootLayoutController {
 	public void initialize() {
 
 	}
-
+	
+	/**
+	 * Close Stage
+	 */
 	@FXML
 	private void handleClose() {
 		System.exit(0);
 	}
 	
+	/**
+	 * Open RouteWindow 
+	 */
+	@FXML
+	private void handleRoute() {
+		this.menufx.viewRouteWindow();
+	}
+	
+	/**
+	 * Info Alert 
+	 */
 	@FXML
 	private void handleInfo(){
 		UtilityViews.Information("Navigator \n"

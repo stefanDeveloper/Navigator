@@ -19,16 +19,13 @@ public class MainController extends Thread {
 	private Menufx 	menufx;
 	private IParser	parser;
 	private Map 	map;
-	
-	@FXML
-	private Canvas mapView;
-	
-	@FXML
-	ProgressIndicator progressIndicator;
-
 	private GraphicsContext gc;
 	private Stage primaryStage;
-
+	@FXML
+	private Canvas mapView;
+	@FXML
+	ProgressIndicator progressIndicator;
+	
 	public Canvas getMap() {
 		return this.mapView;
 	}
@@ -50,24 +47,17 @@ public class MainController extends Thread {
 		
 	}
 	
-	
-	
 	@FXML
 	public void initialize(){ //Thread
-		this.parser =  new Parser();
-		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> nodes = this.parser.getNodes(test);
-		this.gc = mapView.getGraphicsContext2D();
-		this.map = new Map(gc, nodes);
-		UtilityViews.runTask(1000, this.primaryStage);
-		
-		this.map.drawMap();
-		
-		
-		
-
-		
-		
+//		this.parser =  new Parser();
+//		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
+//		ArrayList<Node> nodes = this.parser.getNodes(test);
+//		
+//		this.gc = mapView.getGraphicsContext2D();
+//		this.map = new Map(gc, nodes);
+//		UtilityViews.runTask(1000, this.primaryStage);
+//		
+//		this.map.drawMap();
 	}
 
 	
