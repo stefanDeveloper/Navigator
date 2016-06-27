@@ -15,4 +15,8 @@ public interface IParser {
 	public Object parseFile(File pFile);
 
 	public ArrayList<Node> getNodes(Osm pOsm);
+
+	public ArrayList<Node> deserialize();
+
+	public void serialize(ArrayList<Node> nodes);
 }

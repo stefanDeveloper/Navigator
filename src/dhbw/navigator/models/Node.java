@@ -2,10 +2,11 @@ package dhbw.navigator.models;
 
 import dhbw.navigator.generated.Osm;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Serializable {
 
 	private String name;
 	private ArrayList<Edge> edges = new ArrayList<>();
