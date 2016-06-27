@@ -4,6 +4,7 @@ import java.util.SortedSet;
 import dhbw.navigator.io.Menufx;
 import dhbw.navigator.utility.Utility;
 import dhbw.navigator.utility.UtilityViews;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -72,16 +73,19 @@ public class RouteController {
 
 	@FXML
 	public void initialize() {
-		//Add AutoComplete to TextField with ContextMenu
-		Utility.AutoComplete(this.startTextField, this.nameOfJunctions, this.entriesPopupStart);
-		Utility.AutoComplete(this.finishTextField, this.nameOfJunctions, this.entriesPopupAim);
-		//Add deleteButton for Input
-		Utility.checkInput(this.startTextField, this.startButton);
-		Utility.checkInput(this.finishTextField, this.finishButton);
-		
-		
-
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				//Add AutoComplete to TextField with ContextMenu
+				Utility.AutoComplete(startTextField, nameOfJunctions, entriesPopupStart);
+				Utility.AutoComplete(finishTextField, nameOfJunctions, entriesPopupAim);
+				//Add deleteButton for Input
+				Utility.checkInput(startTextField, startButton);
+				Utility.checkInput(finishTextField, finishButton);
+			}
+		});
 	}
+	
 	/**
 	 * Set Start and Finish after validate check
 	 */
