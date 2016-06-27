@@ -20,17 +20,18 @@ import javafx.stage.Stage;
 
 /**
  * Start Application
+ * 
  * @author Stefan
  *
  */
-public class StartNavigator extends Application{
-	private Stage 			primaryStage;
-	private BorderPane 		primaryBorder;
-	private Menufx 			menufx;
-	private IParser			parser;
+public class StartNavigator extends Application {
+	private Stage primaryStage;
+	private BorderPane primaryBorder;
+	private Menufx menufx;
+	private IParser parser;
 	private SortedSet<String> nameOfJunctions;
-	
-	
+	private RootLayoutController root;
+
 	public Stage getPrimaryStage() {
 		return this.primaryStage;
 	}
@@ -38,53 +39,53 @@ public class StartNavigator extends Application{
 	public BorderPane getPrimaryBorder() {
 		return this.primaryBorder;
 	}
-	
+
 	@Override
-	public void start (Stage primaryStage){
-		//Initialize Stage
+	public void start(Stage primaryStage) {
+		// Initialize Stage
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Navigator");
-		//Size
+		// Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
 		this.primaryStage.setResizable(false);
-		
+
 		this.menufx = new Menufx();
 		this.menufx.setStartNavigator(this);
 		this.menufx.setStage(this.primaryStage);
-		
+
 		this.parser = new Parser();
-		Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> node = parser.getNodes(test);
+		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
+		ArrayList<Node> node = this.parser.getNodes(test);
 		this.nameOfJunctions = new TreeSet<>();
-		
+
 		for (Node n : node) {
 			if (n.getIsJunction() == true)
 				this.nameOfJunctions.add(n.getName());
 		}
-		
-		this.menufx.setNodes(node);		
+
+		this.menufx.setNodes(node);
 		this.menufx.setNameOfJunctions(this.nameOfJunctions);
-		
-		//Load Views
+
+		// Load Views
 		this.rootLayout();
 		this.menufx.viewMainWindow();
 		this.menufx.viewRouteWindow();
-		
+
 	}
-	
+
 	/**
 	 * Load BorderPane
 	 */
-	public void rootLayout(){
+	public void rootLayout() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(RootLayoutController.class.getResource("RootLayoutWindow.fxml"));
 			this.primaryBorder = (BorderPane) loader.load();
-			
-			RootLayoutController controller = loader.getController();
-			controller.setMenufx(this.menufx);
-			
+
+			this.root = loader.getController();
+			this.root.setMenufx(this.menufx);
+
 			Scene scene = new Scene(this.primaryBorder);
 			this.primaryStage.setScene(scene);
 			this.primaryStage.show();
@@ -93,7 +94,12 @@ public class StartNavigator extends Application{
 		}
 	}
 
-	public static void main (String[] args){
-		launch(args);
+	public static void main(String[] args) {
+		Application.launch(args);
 	}
+
+	public RootLayoutController getRoot() {
+		return this.root;
+	}
+
 }

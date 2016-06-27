@@ -53,6 +53,7 @@ public class MainController extends Thread {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				//Draw Map
 				gc = mapView.getGraphicsContext2D();
 				map = new Map(gc, nodes);
 				map.drawMap();
