@@ -15,8 +15,8 @@ import javafx.stage.Stage;
 
 public class Menufx {
 	private Stage 						primaryStage;
-	private TextField					startLabel; 
-	private TextField					aimLabel;
+	private TextField					startTextField; 
+	private TextField					finishTextField;
 	private StartNavigator 				startNavigator;
 		
 	public void setStage(Stage primaryStage) {
@@ -53,11 +53,11 @@ public class Menufx {
 			AnchorPane pane = (AnchorPane) loader.load();
 			
 			Stage stage = new Stage();
-//			stage.setResizable(false);
+			stage.setResizable(false);
 			RouteController routeController = loader.getController();
 			routeController.setMenufx(this);
-			this.aimLabel = routeController.getAimLabel();
-			this.startLabel = routeController.getStartLabel();
+			this.finishTextField = routeController.getAimLabel();
+			this.startTextField = routeController.getStartLabel();
 			routeController.setStageRoute(stage);
 			
 			stage.centerOnScreen();
