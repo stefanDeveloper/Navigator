@@ -1,50 +1,50 @@
 package dhbw.navigator.views;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
-import dhbw.navigator.generated.Osm;
-import dhbw.navigator.implementation.Parser;
-import dhbw.navigator.interfaces.IParser;
 import dhbw.navigator.io.Menufx;
-import dhbw.navigator.models.Node;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import dhbw.navigator.utility.Utility;
+import dhbw.navigator.utility.UtilityViews;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+/**
+ * Controller for RouteWindow.fxml
+ * @author Stefan
+ *
+ */
 public class RouteController {
-
 	private Menufx menufx;
-
+	private Stage stageRoute;
+	private SortedSet<String> nameOfJunctions;
 	@FXML
 	private Button okButton;
-
 	@FXML
 	private Label cancelButton;
-
 	@FXML
-	private TextField startLabel;
-
+	private TextField startTextField;
 	@FXML
-	private TextField aimLabel;
-
-	private Stage stageRoute;
-	private SortedSet<String> t;
-
+	private TextField finishTextField;
 	@FXML
-	private ContextMenu entriesPopup;
+	private ContextMenu entriesPopupStart;
+	@FXML
+	private ContextMenu entriesPopupAim;
+	@FXML
+	private Button startButton;
+	@FXML
+	private Button finishButton;
+
+	
+	public SortedSet<String> getNameOfJunctions() {
+		return nameOfJunctions;
+	}
+
+	public void setNameOfJunctions(SortedSet<String> nameOfJunctions) {
+		this.nameOfJunctions = nameOfJunctions;
+	}
 
 	public Stage getStageRoute() {
 		return stageRoute;
@@ -63,100 +63,73 @@ public class RouteController {
 	}
 
 	public TextField getStartLabel() {
-		return startLabel;
+		return startTextField;
 	}
 
 	public TextField getAimLabel() {
-		return aimLabel;
+		return finishTextField;
 	}
 
 
 	@FXML
 	public void initialize() {
-		entriesPopup = new ContextMenu();
-		IParser parser = new Parser();
-		Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> name = parser.getNodes(test);
-		t = new TreeSet<>();
-		for (Node n : name) {
-			if (n.getIsJunction() == true)
-				t.add(n.getName());
-		}
-
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				//Add AutoComplete to TextField with ContextMenu
+				Utility.AutoComplete(startTextField, nameOfJunctions, entriesPopupStart);
+				Utility.AutoComplete(finishTextField, nameOfJunctions, entriesPopupAim);
+				//Add deleteButton for Input
+				Utility.checkInput(startTextField, startButton);
+				Utility.checkInput(finishTextField, finishButton);
+			}
+		});
 	}
-
+	
+	/**
+	 * Set Start and Finish after validate check
+	 */
 	@FXML
 	private void handleOk() {
-		
+		//Check if Name of TextFields are in the SortedSet
+		if (!this.nameOfJunctions.contains(this.startTextField.getText())){
+			UtilityViews.Error("Startpunkt ist nicht in der Liste vorhanden!\n"
+					+ "Bitte anderen Punkt wählen!");
+		} else if (!this.nameOfJunctions.contains(this.finishTextField.getText())){
+			UtilityViews.Error("Endpunkt ist nicht in der Liste vorhanden!\n"
+					+ "Bitte anderen Punkt wählen!");
+		} else {
+			this.menufx.setStartTextField(this.startTextField);
+			this.menufx.setFinishTextField(this.finishTextField);
+			this.stageRoute.close();
+		}
 	}
-
+	
+	/**
+	 * Close Stage
+	 */
 	@FXML
 	private void handleCancel() {
 		this.stageRoute.close();
 	}
-
+	
+	/**
+	 * Clear Start TextField
+	 */
 	@FXML
-	private void handleTypIn(){
-		startLabel.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				  if (startLabel.getText().length() == 0)
-			        {
-			          entriesPopup.hide();
-			        } else
-			        {
-			          LinkedList<String> searchResult = new LinkedList<>();
-			          searchResult.addAll(t.subSet(startLabel.getText(), startLabel.getText() + Character.MAX_VALUE));
-			          if (t.size() > 0)
-			          {
-			            populatePopup(searchResult);
-			            if (!entriesPopup.isShowing())
-			            {
-			              entriesPopup.show(startLabel, Side.BOTTOM, 0, 0);
-			            }
-			          } else
-			          {
-			            entriesPopup.hide();
-			          }
-			        }
-				
-			}
-		});
-		
-		startLabel.focusedProperty().addListener(new ChangeListener<Boolean>() {
-		   @Override
-		   public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean aBoolean2) {
-		      entriesPopup.hide();
-		    }
-		  });
-		
+	private void handleButtonStart(){
+		this.startTextField.clear();
+		this.startTextField.requestFocus();
 	}
 	
-	private void populatePopup(List<String> searchResult) {
-	    List<CustomMenuItem> menuItems = new LinkedList<>();
-	    // If you'd like more entries, modify this line.
-	    int maxEntries = 10;
-	    int count = Math.min(searchResult.size(), maxEntries);
-	    for (int i = 0; i < count; i++)
-	    {
-	      final String result = searchResult.get(i);
-	      Label entryLabel = new Label(result);
-	      CustomMenuItem item = new CustomMenuItem(entryLabel, true);
-	      item.setOnAction(new EventHandler<ActionEvent>()
-	      {
-	        @Override
-	        public void handle(ActionEvent actionEvent) {
-	          startLabel.setText(result);
-	          entriesPopup.hide();
-	        }
-	      });
-	      menuItems.add(item);
-	    }
-	    entriesPopup.getItems().clear();
-	    entriesPopup.getItems().addAll(menuItems);
-
-	  }
+	/**
+	 * Clear Finish TextField
+	 */
+	@FXML
+	private void handleButtonFinish(){
+		this.finishTextField.clear();
+		this.finishTextField.requestFocus();
+	}
 	
-	public SortedSet<String> getEntries() { return t; }
-
+	
 }

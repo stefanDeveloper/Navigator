@@ -3,7 +3,11 @@ package dhbw.navigator.views;
 import dhbw.navigator.io.Menufx;
 import dhbw.navigator.utility.UtilityViews;
 import javafx.fxml.FXML;
-
+/**
+ * Controller for RootLayout.fxml
+ * @author Stefan
+ *
+ */
 public class RootLayoutController {
 	private Menufx menufx;
 	
@@ -11,12 +15,26 @@ public class RootLayoutController {
 	public void initialize() {
 
 	}
-
+	
+	/**
+	 * Close Stage
+	 */
 	@FXML
 	private void handleClose() {
 		System.exit(0);
 	}
 	
+	/**
+	 * Open RouteWindow 
+	 */
+	@FXML
+	private void handleRoute() {
+		this.menufx.viewRouteWindow();
+	}
+	
+	/**
+	 * Info Alert 
+	 */
 	@FXML
 	private void handleInfo(){
 		UtilityViews.Information("Navigator \n"

@@ -9,8 +9,26 @@ import javafx.scene.canvas.GraphicsContext;
 public class Map {
 	private GraphicsContext graphic;
 	private ArrayList<Node> nodeList;
+	private int multi;
+	private int y;
 	
 	
+	public int getMulti() {
+		return multi;
+	}
+
+	public void setMulti(int multi) {
+		this.multi = multi;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
 	public Map(GraphicsContext graphic, ArrayList<Node> nodeList){
 		this.graphic = graphic;
 		this.nodeList = nodeList;
@@ -50,8 +68,8 @@ public class Map {
 		double xMulti = -xSize / lonDif;
 		double yMulti = ySize / latDif;
 
-		int multi = 500;
-		int y = 600;
+		multi = 500;
+		y = 600;
 		int diameter = 10;
 
 		for (Node n : this.nodeList) {
