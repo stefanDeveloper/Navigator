@@ -58,7 +58,7 @@
                         </ContextMenu>
                      </contextMenu>
                   </TextField>
-                  <Button fx:id="finishButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="20.0" prefWidth="10.0" text="X" visible="false" />
+                  <Button fx:id="finishButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleButtonFinish" prefHeight="20.0" prefWidth="10.0" text="X" visible="false" />
                </children>
             </HBox>
          </children>
