@@ -54,13 +54,10 @@ public class MainController extends Thread {
 			@Override
 			public void run() {
 				gc = mapView.getGraphicsContext2D();
+
 				map = new Map(gc, nodes);
 				map.drawMap();
 			}
 		});
-		
-	
 	}
-
-	
 }

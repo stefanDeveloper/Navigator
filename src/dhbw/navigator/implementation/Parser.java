@@ -55,10 +55,6 @@ public class Parser implements IParser {
 		long startTime = System.nanoTime();
 
 		ArrayList<Node> nodes;
-		File f = new File(path);
-		if(f.exists() && !f.isDirectory()) {
-			f.delete();
-		}
 
 		try{
 
