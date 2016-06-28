@@ -1,8 +1,9 @@
 package dhbw.navigator.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Edge {
+public class Edge implements Serializable {
 
     private float distance;
     private String label;
