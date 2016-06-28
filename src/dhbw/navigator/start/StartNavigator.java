@@ -54,8 +54,16 @@ public class StartNavigator extends Application{
 		this.menufx.setStage(this.primaryStage);
 		
 		this.parser = new Parser();
-		Osm test = (Osm) parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> node = parser.getNodes(test);
+
+		ArrayList<Node> node;
+		boolean firstStart = false;
+		if(firstStart)
+		{
+			Osm test = (Osm) parser.parseFile(new File("Testdata/south_mid_germany.xml"));
+			node = parser.getNodes(test);
+			parser.serialize(node);
+		}
+		node = parser.deserialize();
 		this.nameOfJunctions = new TreeSet<>();
 		
 		for (Node n : node) {
