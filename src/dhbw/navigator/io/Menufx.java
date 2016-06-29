@@ -10,109 +10,113 @@ import dhbw.navigator.views.MainController;
 import dhbw.navigator.views.RootLayoutController;
 import dhbw.navigator.views.RouteController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
  * Input/Output Class
+ * 
  * @author Stefan
  *
  */
 public class Menufx {
-	private Stage 						primaryStage;
-	private TextField					startTextField; 
-	private TextField					finishTextField;
-	private StartNavigator 				startNavigator;
-	private SortedSet<String> 			nameOfJunctions;
-	private ArrayList<Node> 			nodes;
-	
+	private Stage primaryStage;
+	private TextField startTextField;
+	private TextField finishTextField;
+	private StartNavigator startNavigator;
+	private SortedSet<String> nameOfJunctions;
+	private ArrayList<Node> nodes;
+	private MainController mainController;
+	private RouteController routeController;
+
 	public ArrayList<Node> getNodes() {
-		return nodes;
+		return this.nodes;
 	}
+
 	public void setNodes(ArrayList<Node> nodes) {
 		this.nodes = nodes;
 	}
+
 	public SortedSet<String> getNameOfJunctions() {
-		return nameOfJunctions;
+		return this.nameOfJunctions;
 	}
+
 	public void setNameOfJunctions(SortedSet<String> nameOfJunctions) {
 		this.nameOfJunctions = nameOfJunctions;
 	}
+
 	public TextField getStartTextField() {
-		return startTextField;
+		return this.startTextField;
 	}
+
 	public void setStartTextField(TextField startTextField) {
 		this.startTextField = startTextField;
 	}
+
 	public TextField getFinishTextField() {
-		return finishTextField;
+		return this.finishTextField;
 	}
+
 	public void setFinishTextField(TextField finishTextField) {
 		this.finishTextField = finishTextField;
 	}
+
 	public void setStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
+
 	public void setStartNavigator(StartNavigator startNavigator) {
 		this.startNavigator = startNavigator;
 	}
 
-	
+	public StartNavigator getStartNavigator() {
+		return this.startNavigator;
+	}
+
 	/**
 	 * Load MainWindow.fxml
 	 */
-	public void viewMainWindow(){
+	public void viewMainWindow() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(RootLayoutController.class.getResource("MainWindow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
-			
-			//Initialize Controller
-			MainController mainController = loader.getController();
-			mainController.setStage(this.primaryStage);
-			mainController.setNodes(nodes);
-			mainController.setMenufx(this);	
-			
-			
-			this.startNavigator.getPrimaryBorder().setCenter(pane);
+
+			// Initialize Controller
+			this.mainController = loader.getController();
+			this.mainController.setStage(this.primaryStage);
+			this.mainController.setNodes(this.nodes);
+			this.mainController.setMenufx(this);
+
+			this.startNavigator.getRoot().addToCenter(pane);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Load RouteWindow.fxml
 	 */
-	public void viewRouteWindow(){
+	public AnchorPane viewRouteWindow() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(RootLayoutController.class.getResource("RouteWindow.fxml"));
 			AnchorPane pane = (AnchorPane) loader.load();
-			
-			//Set Stage
-			Stage stage = new Stage();
-			stage.setResizable(false);
-			//Initialize Controller
-			RouteController routeController = loader.getController();
-			routeController.setMenufx(this);
-			this.finishTextField = routeController.getAimLabel();
-			this.startTextField = routeController.getStartLabel();
-			routeController.setStageRoute(stage);
-			routeController.setNameOfJunctions(nameOfJunctions);
-			
-			stage.centerOnScreen();
-			stage.initModality(Modality.WINDOW_MODAL);
-			
-			//Set Scene
-			Scene scene = new Scene(pane);
-            stage.setScene(scene);
-			stage.showAndWait();
-			
+
+			// Initialize Controller
+			this.routeController = loader.getController();
+			this.routeController.setMenufx(this);
+			this.routeController.setNode(pane);
+			this.routeController.setNameOfJunctions(this.nameOfJunctions);
+			this.finishTextField = this.routeController.getAimLabel();
+			this.startTextField = this.routeController.getStartLabel();
+
+			// this.startNavigator.getRoot().addToCenter(pane);
+			return pane;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 }
