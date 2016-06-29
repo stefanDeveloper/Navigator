@@ -48,61 +48,64 @@ public class BorderSlideBar extends VBox {
 		// Add nodes in the vbox
 		this.getChildren().addAll(nodes);
 
-		controlButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent actionEvent) {
-				// Create an animation to hide the panel.
-				final Animation hidePanel = new Transition() {
-					{
-						this.setCycleDuration(Duration.millis(250));
-					}
+		if (controlButton.getProperties() != null) {
 
-					@Override
-					protected void interpolate(double frac) {
-						final double size = BorderSlideBar.this.getExpandedSize() * (1.0 - frac);
-						BorderSlideBar.this.setPrefWidth(size);
-					}
-				};
+			controlButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent actionEvent) {
+					// Create an animation to hide the panel.
+					final Animation hidePanel = new Transition() {
+						{
+							this.setCycleDuration(Duration.millis(250));
+						}
 
-				hidePanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent actionEvent) {
-						BorderSlideBar.this.setVisible(false);
-					}
-				});
+						@Override
+						protected void interpolate(double frac) {
+							final double size = BorderSlideBar.this.getExpandedSize() * (1.0 - frac);
+							BorderSlideBar.this.setPrefWidth(size);
+						}
+					};
 
-				// Create an animation to show the panel.
-				final Animation showPanel = new Transition() {
-					{
-						this.setCycleDuration(Duration.millis(250));
-					}
+					hidePanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent actionEvent) {
+							BorderSlideBar.this.setVisible(false);
+						}
+					});
 
-					@Override
-					protected void interpolate(double frac) {
-						final double size = BorderSlideBar.this.getExpandedSize() * frac;
-						BorderSlideBar.this.setPrefWidth(size);
-					}
-				};
+					// Create an animation to show the panel.
+					final Animation showPanel = new Transition() {
+						{
+							this.setCycleDuration(Duration.millis(250));
+						}
 
-				showPanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent actionEvent) {
-					}
-				});
+						@Override
+						protected void interpolate(double frac) {
+							final double size = BorderSlideBar.this.getExpandedSize() * frac;
+							BorderSlideBar.this.setPrefWidth(size);
+						}
+					};
 
-				if (showPanel.statusProperty().get() == Animation.Status.STOPPED
-						&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
+					showPanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent actionEvent) {
+						}
+					});
 
-					if (BorderSlideBar.this.isVisible()) {
-						hidePanel.play();
+					if (showPanel.statusProperty().get() == Animation.Status.STOPPED
+							&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
 
-					} else {
-						BorderSlideBar.this.setVisible(true);
-						showPanel.play();
+						if (BorderSlideBar.this.isVisible()) {
+							hidePanel.play();
+
+						} else {
+							BorderSlideBar.this.setVisible(true);
+							showPanel.play();
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
