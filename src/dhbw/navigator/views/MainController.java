@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MainController extends Thread {
@@ -54,10 +55,24 @@ public class MainController extends Thread {
 			@Override
 			public void run() {
 				//Draw Map
-				gc = mapView.getGraphicsContext2D();
 
-				map = new Map(gc, nodes);
-				map.drawMap();
+				Map map = new Map(menufx.getStartNavigator().getPrimaryStage().getWidth(),
+						menufx.getStartNavigator().getPrimaryStage().getHeight(),
+						getNodes(),
+						false);
+
+				ArrayList<Node> routeNodes = new ArrayList<Node>();
+				for (int i = 0; i < 100; i++) {
+					routeNodes.add(getNodes().get(i));
+				}
+
+				Map route = new Map(menufx.getStartNavigator().getPrimaryStage().getWidth(),
+						menufx.getStartNavigator().getPrimaryStage().getHeight(),
+						getNodes(),
+						true);
+				menufx.getStartNavigator().getRoot().addToCenter(map);
+				menufx.getStartNavigator().getRoot().addToCenter(route);
+
 			}
 		});
 	}
