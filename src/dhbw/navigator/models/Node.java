@@ -107,8 +107,9 @@ public class Node implements Serializable {
 
 	public boolean isSameNode(Node compareNode)
 	{
-		if(compareNode.getRef()==null || this.getRef()==null) return false;
-		return (compareNode.getRef().equals(this.getRef()));
+		//if(compareNode.getRef()==null || this.getRef()==null) return false;
+		//return (compareNode.getRef().equals(this.getRef()));
+		return compareNode.getName().equals(this.getName());
 	};
 
 	public String getRef() {

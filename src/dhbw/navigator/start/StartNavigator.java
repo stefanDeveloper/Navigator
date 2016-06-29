@@ -46,8 +46,8 @@ public class StartNavigator extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Navigator");
 		// Size
-		this.primaryStage.setMinHeight(720);
-		this.primaryStage.setMinWidth(680);
+		this.primaryStage.setMinHeight(720*1.3);
+		this.primaryStage.setMinWidth(680*1.3);
 		// this.primaryStage.setResizable(false);
 
 		this.menufx = new Menufx();
@@ -55,8 +55,19 @@ public class StartNavigator extends Application {
 		this.menufx.setStage(this.primaryStage);
 
 		this.parser = new Parser();
-		Osm test = (Osm) this.parser.parseFile(new File("Testdata/export.xml"));
-		ArrayList<Node> node = this.parser.getNodes(test);
+
+		ArrayList<Node> node;
+		boolean resyncData = false;
+		if(resyncData)
+		{
+			Osm test = (Osm) this.parser.parseFile(new File("Testdata/germany.xml"));
+			node = this.parser.getNodes(test);
+			parser.serialize(node);
+		}
+		else
+		{
+			node = parser.deserialize();
+		}
 		this.nameOfJunctions = new TreeSet<>();
 
 		for (Node n : node) {
