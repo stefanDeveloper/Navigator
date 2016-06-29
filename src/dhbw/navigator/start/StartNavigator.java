@@ -56,10 +56,10 @@ public class StartNavigator extends Application{
 		this.parser = new Parser();
 
 		ArrayList<Node> node;
-		boolean firstStart = false;
+		boolean firstStart = true;
 		if(firstStart)
 		{
-			Osm test = (Osm) parser.parseFile(new File("Testdata/south_mid_germany.xml"));
+			Osm test = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
 			node = parser.getNodes(test);
 			parser.serialize(node);
 		}
