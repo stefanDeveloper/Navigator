@@ -102,7 +102,6 @@ public class RouteController {
 		} else {
 			this.menufx.setStartTextField(this.startTextField);
 			this.menufx.setFinishTextField(this.finishTextField);
-			this.menufx.getStartNavigator().getRoot().removeToCenter(this.node);
 		}
 	}
 
@@ -111,7 +110,7 @@ public class RouteController {
 	 */
 	@FXML
 	private void handleCancel() {
-		this.menufx.getStartNavigator().getRoot().removeToCenter(this.node);
+
 	}
 
 	/**

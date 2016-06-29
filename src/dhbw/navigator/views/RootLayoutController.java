@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -18,24 +17,23 @@ import javafx.scene.layout.StackPane;
  */
 public class RootLayoutController {
 	private Menufx menufx;
+	private BorderSlideBar FlapBar;
 	@FXML
 	private StackPane primaryStackPane;
 	@FXML
 	private Button region;
-	Label test = new Label("sdjak");
 
 	@FXML
 	public void initialize() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				BorderSlideBar topFlapBar = new BorderSlideBar(300, RootLayoutController.this.region,
+				RootLayoutController.this.FlapBar = new BorderSlideBar(300, RootLayoutController.this.region,
 						RootLayoutController.this.menufx.viewRouteWindow());
-				RootLayoutController.this.menufx.getStartNavigator().getPrimaryBorder().setLeft(topFlapBar);
+				RootLayoutController.this.menufx.getStartNavigator().getPrimaryBorder()
+						.setLeft(RootLayoutController.this.FlapBar);
 			}
 		});
-
 	}
 
 	public void addToCenter(Node node) {
@@ -68,7 +66,7 @@ public class RootLayoutController {
 	@FXML
 	private void handleInfo() {
 		UtilityViews.Information("Navigator \n" + "Gruppenprojekt Programmieren\n" + "2. Semester\n"
-				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad Müller");
+				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad Mï¿½ller");
 	}
 
 	public Menufx getMenufx() {

@@ -48,7 +48,7 @@ public class StartNavigator extends Application {
 		// Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
-		this.primaryStage.setResizable(false);
+		// this.primaryStage.setResizable(false);
 
 		this.menufx = new Menufx();
 		this.menufx.setStartNavigator(this);
@@ -70,7 +70,7 @@ public class StartNavigator extends Application {
 		// Load Views
 		this.rootLayout();
 		this.menufx.viewMainWindow();
-		this.menufx.viewRouteWindow();
+		// this.menufx.viewRouteWindow();
 
 	}
 
