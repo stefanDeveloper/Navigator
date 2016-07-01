@@ -25,8 +25,8 @@ public class TextFieldAutoCompleteControle extends TextField {
 	private SortedSet<String> namesOfJunction;
 	private ContextMenu contextMenu;
 
-	public TextFieldAutoCompleteControle(SortedSet<String> namesOfJunctions) {
-		this.namesOfJunction = namesOfJunctions;
+	public TextFieldAutoCompleteControle(SortedSet<String> pNamesOfJunctions) {
+		this.namesOfJunction = pNamesOfJunctions;
 		this.contextMenu = new ContextMenu();
 		this.setContextMenu(this.contextMenu);
 		this.textProperty().addListener(

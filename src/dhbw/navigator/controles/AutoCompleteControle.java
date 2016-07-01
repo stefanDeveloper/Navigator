@@ -15,9 +15,9 @@ public class AutoCompleteControle extends HBox {
 	private TextFieldAutoCompleteControle textField;
 	private Label label;
 
-	public AutoCompleteControle(String labelText, SortedSet<String> context) {
+	public AutoCompleteControle(String labelText, SortedSet<String> namesOfJunctions) {
 		this.label = new Label(labelText);
-		this.textField = new TextFieldAutoCompleteControle(context);
+		this.textField = new TextFieldAutoCompleteControle(namesOfJunctions);
 		this.clearButton = new Button("X");
 		this.clearButton.setVisible(false);
 
