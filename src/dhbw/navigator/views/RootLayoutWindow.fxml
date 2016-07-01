@@ -17,7 +17,6 @@
           <Menu mnemonicParsing="false" text="Help">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleInfo" text="Info" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleRoute" text="Route wählen ...." />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Close" />
             </items>

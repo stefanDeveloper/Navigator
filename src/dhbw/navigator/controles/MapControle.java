@@ -1,8 +1,7 @@
-package dhbw.navigator.utility;
+package dhbw.navigator.controles;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
@@ -13,21 +12,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
-public class Map extends Canvas{
+public class MapControle extends Canvas {
 
 	ArrayList<Node> nodeList;
 	double xSize = 0;
 	double ySize = 0;
 	StackPane parent = null;
 
-
-	public Map(double width, double height, ArrayList<Node> nodeList, boolean route) {
+	public MapControle(ArrayList<Node> nodeList, boolean route) {
 		GraphicsContext graphic = this.getGraphicsContext2D();
 		this.nodeList = nodeList;
 
-		if(route) graphic.setStroke(Color.AQUA);
+		if (route)
+			graphic.setStroke(Color.AQUA);
 
 		this.parentProperty().addListener(new ChangeListener<Parent>() {
 
@@ -35,22 +33,23 @@ public class Map extends Canvas{
 			public void changed(ObservableValue<? extends Parent> ov, Parent oldP, Parent newP) {
 				if (newP != null) {
 					System.out.println("my parent is " + newP);
-					parent = (StackPane)getParent();
+					MapControle.this.parent = (StackPane) MapControle.this.getParent();
 
-
-					updateGraph();
-					parent.heightProperty().addListener(new ChangeListener<Number>() {
+					MapControle.this.updateGraph();
+					MapControle.this.parent.heightProperty().addListener(new ChangeListener<Number>() {
 						@Override
-						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-							updateGraph();
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+								Number newValue) {
+							MapControle.this.updateGraph();
 
 						}
 					});
-					parent.widthProperty().addListener(new ChangeListener<Number>() {
+					MapControle.this.parent.widthProperty().addListener(new ChangeListener<Number>() {
 						@Override
-						public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+								Number newValue) {
 
-							updateGraph();
+							MapControle.this.updateGraph();
 
 						}
 					});
@@ -59,35 +58,29 @@ public class Map extends Canvas{
 		});
 	}
 
-
-	void updateGraph()
-	{
-		if(parent != null) {
-			xSize = parent.getWidth();
-			ySize = parent.getHeight();
-			if(xSize<ySize)
-			{
-				ySize = xSize;
-			}
-			else
-			{
-				xSize = ySize;
+	void updateGraph() {
+		if (this.parent != null) {
+			this.xSize = this.parent.getWidth();
+			this.ySize = this.parent.getHeight();
+			if (this.xSize < this.ySize) {
+				this.ySize = this.xSize;
+			} else {
+				this.xSize = this.ySize;
 			}
 
 			GraphicsContext graphic = this.getGraphicsContext2D();
 
-			graphic.clearRect(0, 0, xSize, ySize);
+			graphic.clearRect(0, 0, this.xSize, this.ySize);
 
-			graphic.getCanvas().setHeight(ySize);
-			graphic.getCanvas().setWidth(xSize);
+			graphic.getCanvas().setHeight(this.ySize);
+			graphic.getCanvas().setWidth(this.xSize);
 
-			graphic.strokeLine(0, 0, xSize / 2, ySize / 2);
-			graphic.strokeLine(xSize, 0, xSize / 2, ySize / 2);
-			graphic.strokeLine(xSize, ySize, xSize / 2, ySize / 2);
-			graphic.strokeLine(0, ySize, xSize / 2, ySize / 2);
+			graphic.strokeLine(0, 0, this.xSize / 2, this.ySize / 2);
+			graphic.strokeLine(this.xSize, 0, this.xSize / 2, this.ySize / 2);
+			graphic.strokeLine(this.xSize, this.ySize, this.xSize / 2, this.ySize / 2);
+			graphic.strokeLine(0, this.ySize, this.xSize / 2, this.ySize / 2);
 
-
-			Node firstNode = nodeList.get(0);
+			Node firstNode = this.nodeList.get(0);
 			// upper left
 			BigDecimal lat1 = firstNode.getLat();
 			BigDecimal lon1 = firstNode.getLon();
@@ -97,7 +90,7 @@ public class Map extends Canvas{
 
 			BigDecimal compareLat;
 			BigDecimal compareLon;
-			for (Node n : nodeList) {
+			for (Node n : this.nodeList) {
 				compareLat = n.getLat();
 				compareLon = n.getLon();
 				if (compareLat.compareTo(lat1) == -1)
@@ -113,23 +106,22 @@ public class Map extends Canvas{
 			double latDif = lat2.subtract(lat1).doubleValue(); // Breitenunterschied
 			double lonDif = lon2.subtract(lon1).doubleValue(); // Höhenunterschied
 
-
-			double xMulti = -(-xSize / lonDif);
-			double yMulti = -(ySize / latDif);
+			double xMulti = -(-this.xSize / lonDif);
+			double yMulti = -(this.ySize / latDif);
 
 			double multi = 0;
 			if (xMulti < yMulti) {
 				multi = xMulti;
 			}
 
-			//multi = 500;
-			//y = 600;
+			// multi = 500;
+			// y = 600;
 			int diameter = 10;
 
-			for (Node n : nodeList) {
+			for (Node n : this.nodeList) {
 				if (n.getIsJunction() && false) {
-					double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + xSize;
-					double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + ySize;
+					double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
+					double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
 					graphic.fillOval(nLon - diameter / 2, nLat - diameter / 2, diameter, diameter);
 				}
 
@@ -138,10 +130,10 @@ public class Map extends Canvas{
 					for (int i = 0; i < allNodes.size() - 1; i++) {
 						Node en = allNodes.get(i);
 						Node enNext = allNodes.get(i + 1);
-						double lo1 = lon1.subtract(en.getLon()).doubleValue() * xMulti + xSize;
-						double la1 = en.getLat().subtract(lat1).doubleValue() * yMulti + ySize;
-						double lo2 = lon1.subtract(enNext.getLon()).doubleValue() * xMulti + xSize;
-						double la2 = enNext.getLat().subtract(lat1).doubleValue() * yMulti + ySize;
+						double lo1 = lon1.subtract(en.getLon()).doubleValue() * xMulti + this.xSize;
+						double la1 = en.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+						double lo2 = lon1.subtract(enNext.getLon()).doubleValue() * xMulti + this.xSize;
+						double la2 = enNext.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
 						graphic.strokeLine(lo2, la2, lo1, la1);
 					}
 				}
