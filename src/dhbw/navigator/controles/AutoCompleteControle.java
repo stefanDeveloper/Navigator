@@ -1,6 +1,6 @@
 package dhbw.navigator.controles;
 
-import java.util.SortedSet;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,35 +15,34 @@ public class AutoCompleteControle extends HBox {
 	private TextFieldAutoCompleteControle textField;
 	private Label label;
 
-	public AutoCompleteControle(String labelText, SortedSet<String> context) {
-		this.label = new Label(labelText);
-		this.textField = new TextFieldAutoCompleteControle(context);
-		this.clearButton = new Button("X");
-		this.clearButton.setVisible(false);
+	public AutoCompleteControle(String labelText, List<String> context) {
+		label = new Label(labelText);
+		textField = new TextFieldAutoCompleteControle(context);
+		clearButton = new Button("X");
+		clearButton.setVisible(false);
 
-		this.getChildren().addAll(this.label, this.textField, this.clearButton);
-		this.checkInput();
-		this.clearButton.setOnAction(new EventHandler<ActionEvent>() {
+		getChildren().addAll(label, textField, clearButton);
+		checkInput();
+		clearButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				AutoCompleteControle.this.textField.setText("");
+				textField.setText("");
 			}
 		});
 	}
 
 	public String getText() {
-		return this.textField.getText();
+		return textField.getText();
 	}
 
 	private void checkInput() {
-		this.textField.textProperty().addListener(new ChangeListener<String>() {
+		textField.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (AutoCompleteControle.this.textField.getText().length() > 0
-						&& !(AutoCompleteControle.this.textField.getText().equals(" "))) {
-					AutoCompleteControle.this.clearButton.setVisible(true);
-				} else if (AutoCompleteControle.this.textField.getText().length() == 0) {
-					AutoCompleteControle.this.clearButton.setVisible(false);
+				if (textField.getText().length() > 0 && !(textField.getText().equals(" "))) {
+					clearButton.setVisible(true);
+				} else if (textField.getText().length() == 0) {
+					clearButton.setVisible(false);
 				}
 			}
 		});

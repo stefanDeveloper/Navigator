@@ -40,13 +40,13 @@ public class SlideBarControle extends VBox {
 	 *            Nodes inside the panel.
 	 */
 	public SlideBarControle(double expandedSize, final Button controlButton, Node... nodes) {
-		this.setExpandedSize(expandedSize);
-		this.setVisible(false);
+		setExpandedSize(expandedSize);
+		setVisible(false);
 
-		this.setPrefHeight(0);
-		this.setMinHeight(0);
+		setPrefHeight(0);
+		setMinHeight(0);
 		// Add nodes in the vbox
-		this.getChildren().addAll(nodes);
+		getChildren().addAll(nodes);
 
 		if (controlButton.getProperties() != null) {
 
@@ -56,7 +56,7 @@ public class SlideBarControle extends VBox {
 					// Create an animation to hide the panel.
 					final Animation hidePanel = new Transition() {
 						{
-							this.setCycleDuration(Duration.millis(250));
+							setCycleDuration(Duration.millis(250));
 						}
 
 						@Override
@@ -76,7 +76,7 @@ public class SlideBarControle extends VBox {
 					// Create an animation to show the panel.
 					final Animation showPanel = new Transition() {
 						{
-							this.setCycleDuration(Duration.millis(250));
+							setCycleDuration(Duration.millis(250));
 						}
 
 						@Override
@@ -112,7 +112,7 @@ public class SlideBarControle extends VBox {
 	 * @return the expandedSize
 	 */
 	public double getExpandedSize() {
-		return this.expandedSize;
+		return expandedSize;
 	}
 
 	/**

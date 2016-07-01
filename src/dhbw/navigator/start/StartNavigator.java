@@ -1,7 +1,8 @@
 package dhbw.navigator.start;
 
 import java.io.IOException;
-import java.util.SortedSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import dhbw.navigator.views.RootLayoutController;
 import dhbw.navigator.views.SideBarController;
@@ -21,9 +22,17 @@ import javafx.stage.Stage;
 public class StartNavigator extends Application {
 	private Stage primaryStage;
 	private BorderPane primaryBorder;
-	private SortedSet<String> nameOfJunctions;
-	private RootLayoutController root;
+	private List<String> namesOfJunctions;
+	private RootLayoutController rootLayout;
 	private SideBarController sideBarController;
+
+	public List<String> getNamesOfJunctions() {
+		return this.namesOfJunctions;
+	}
+
+	public void setNamesOfJunctions(List<String> namesOfJunctions) {
+		this.namesOfJunctions = namesOfJunctions;
+	}
 
 	public Stage getPrimaryStage() {
 		return this.primaryStage;
@@ -31,10 +40,6 @@ public class StartNavigator extends Application {
 
 	public BorderPane getPrimaryBorder() {
 		return this.primaryBorder;
-	}
-
-	public RootLayoutController getRoot() {
-		return this.root;
 	}
 
 	@Override
@@ -46,8 +51,7 @@ public class StartNavigator extends Application {
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
 		// Load Views
-
-		this.sideBarController = new SideBarController();
+		this.namesOfJunctions = new ArrayList<>();
 
 		this.rootLayout();
 
@@ -62,10 +66,12 @@ public class StartNavigator extends Application {
 			loader.setLocation(RootLayoutController.class.getResource("RootLayoutWindow.fxml"));
 			this.primaryBorder = (BorderPane) loader.load();
 
-			this.root = loader.getController();
-			this.root.setStart(this);
-			this.root.setSideBar(this.sideBarController);
+			// Initialize Controller
+			this.rootLayout = loader.getController();
+			this.rootLayout.setStart(this);
+			this.rootLayout.setNamesOfJunctions(this.namesOfJunctions);
 
+			// Initialize Scene
 			Scene scene = new Scene(this.primaryBorder);
 			this.primaryStage.setScene(scene);
 			this.primaryStage.show();
@@ -86,7 +92,7 @@ public class StartNavigator extends Application {
 			// Initialize Controller
 			this.sideBarController = loader.getController();
 			this.sideBarController.setNode(pane);
-			// this.sideBarController.setNameOfJunctions(this.nameOfJunctions);
+			this.sideBarController.setNameOfJunctions(this.namesOfJunctions);
 
 			return pane;
 		} catch (IOException e) {

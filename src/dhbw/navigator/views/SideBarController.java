@@ -1,6 +1,6 @@
 package dhbw.navigator.views;
 
-import java.util.SortedSet;
+import java.util.List;
 
 import dhbw.navigator.controles.AutoCompleteControle;
 import dhbw.navigator.utility.UtilityViews;
@@ -18,14 +18,14 @@ import javafx.scene.layout.VBox;
  *
  */
 public class SideBarController {
-	private SortedSet<String> nameOfJunctions;
+	private List<String> nameOfJunctions;
+	private AutoCompleteControle start;
+	private AutoCompleteControle finish;
 	private Node node;
 	@FXML
 	private Button okButton;
 	@FXML
 	private Label cancelButton;
-	private AutoCompleteControle start;
-	private AutoCompleteControle finish;
 	@FXML
 	private Button startButton;
 	@FXML
@@ -34,19 +34,20 @@ public class SideBarController {
 	private VBox vBox;
 
 	public Node getNode() {
-		return this.node;
+		return node;
 	}
 
 	public void setNode(Node node) {
 		this.node = node;
 	}
 
-	public SortedSet<String> getNameOfJunctions() {
-		return this.nameOfJunctions;
+	public List<String> getNameOfJunctions() {
+		return nameOfJunctions;
 	}
 
-	public void setNameOfJunctions(SortedSet<String> nameOfJunctions) {
+	public void setNameOfJunctions(List<String> nameOfJunctions) {
 		this.nameOfJunctions = nameOfJunctions;
+
 	}
 
 	@FXML
@@ -54,10 +55,10 @@ public class SideBarController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				SideBarController.this.start = new AutoCompleteControle("Start", SideBarController.this.nameOfJunctions);
-				SideBarController.this.finish = new AutoCompleteControle("Ziel", SideBarController.this.nameOfJunctions);
-				SideBarController.this.vBox.getChildren().add(0, SideBarController.this.start);
-				SideBarController.this.vBox.getChildren().add(1, SideBarController.this.finish);
+				start = new AutoCompleteControle("Start", nameOfJunctions);
+				finish = new AutoCompleteControle("Ziel", nameOfJunctions);
+				vBox.getChildren().add(0, start);
+				vBox.getChildren().add(1, finish);
 			}
 		});
 
@@ -69,22 +70,11 @@ public class SideBarController {
 	@FXML
 	private void handleOk() {
 		// Check if Name of TextFields are in the SortedSet
-		if (!this.nameOfJunctions.contains(this.start.getText())) {
+		if (!nameOfJunctions.contains(start.getText())) {
 			UtilityViews.Error("Startpunkt ist nicht in der Liste vorhanden!\n" + "Bitte anderen Punkt w�hlen!");
-		} else if (!this.nameOfJunctions.contains(this.finish.getText())) {
+		} else if (!nameOfJunctions.contains(finish.getText())) {
 			UtilityViews.Error("Endpunkt ist nicht in der Liste vorhanden!\n" + "Bitte anderen Punkt w�hlen!");
-		} else {
-			// this.menufx.setStartTextField(this.start);
-			// this.menufx.setFinishTextField(this.finish);
 		}
-	}
-
-	/**
-	 * Close Stage
-	 */
-	@FXML
-	private void handleCancel() {
-
 	}
 
 	/**
@@ -92,7 +82,7 @@ public class SideBarController {
 	 */
 	@FXML
 	private void handleButtonStart() {
-		this.start.requestFocus();
+		start.requestFocus();
 	}
 
 	/**
@@ -100,7 +90,7 @@ public class SideBarController {
 	 */
 	@FXML
 	private void handleButtonFinish() {
-		this.finish.requestFocus();
+		finish.requestFocus();
 	}
 
 }
