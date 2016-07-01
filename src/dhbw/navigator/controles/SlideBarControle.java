@@ -1,4 +1,4 @@
-package dhbw.navigator.utility;
+package dhbw.navigator.controles;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -12,7 +12,7 @@ import javafx.util.Duration;
 /**
  * Animates a node on and off screen to the top, right, bottom or left side.
  */
-public class BorderSlideBar extends VBox {
+public class SlideBarControle extends VBox {
 	private double expandedSize;
 
 	/**
@@ -39,7 +39,7 @@ public class BorderSlideBar extends VBox {
 	 * @param nodes
 	 *            Nodes inside the panel.
 	 */
-	public BorderSlideBar(double expandedSize, final Button controlButton, Node... nodes) {
+	public SlideBarControle(double expandedSize, final Button controlButton, Node... nodes) {
 		this.setExpandedSize(expandedSize);
 		this.setVisible(false);
 
@@ -61,15 +61,15 @@ public class BorderSlideBar extends VBox {
 
 						@Override
 						protected void interpolate(double frac) {
-							final double size = BorderSlideBar.this.getExpandedSize() * (1.0 - frac);
-							BorderSlideBar.this.setPrefWidth(size);
+							final double size = SlideBarControle.this.getExpandedSize() * (1.0 - frac);
+							SlideBarControle.this.setPrefWidth(size);
 						}
 					};
 
 					hidePanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent actionEvent) {
-							BorderSlideBar.this.setVisible(false);
+							SlideBarControle.this.setVisible(false);
 						}
 					});
 
@@ -81,8 +81,8 @@ public class BorderSlideBar extends VBox {
 
 						@Override
 						protected void interpolate(double frac) {
-							final double size = BorderSlideBar.this.getExpandedSize() * frac;
-							BorderSlideBar.this.setPrefWidth(size);
+							final double size = SlideBarControle.this.getExpandedSize() * frac;
+							SlideBarControle.this.setPrefWidth(size);
 						}
 					};
 
@@ -95,11 +95,11 @@ public class BorderSlideBar extends VBox {
 					if (showPanel.statusProperty().get() == Animation.Status.STOPPED
 							&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
 
-						if (BorderSlideBar.this.isVisible()) {
+						if (SlideBarControle.this.isVisible()) {
 							hidePanel.play();
 
 						} else {
-							BorderSlideBar.this.setVisible(true);
+							SlideBarControle.this.setVisible(true);
 							showPanel.play();
 						}
 					}
