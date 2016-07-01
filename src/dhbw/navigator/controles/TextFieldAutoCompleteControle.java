@@ -3,7 +3,6 @@ package dhbw.navigator.controles;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,39 +21,39 @@ import javafx.scene.control.TextField;
  *
  */
 public class TextFieldAutoCompleteControle extends TextField {
-	private SortedSet<String> namesOfJunction;
+	private List<String> namesOfJunction;
 	private ContextMenu contextMenu;
 
-	public TextFieldAutoCompleteControle(SortedSet<String> namesOfJunctions) {
-		this.namesOfJunction = namesOfJunctions;
-		this.contextMenu = new ContextMenu();
-		this.setContextMenu(this.contextMenu);
-		this.textProperty().addListener(
+	public TextFieldAutoCompleteControle(List<String> namesOfJunctions) {
+		namesOfJunction = namesOfJunctions;
+		contextMenu = new ContextMenu();
+		setContextMenu(contextMenu);
+		textProperty().addListener(
 				(ChangeListener<String>) (o, oldVal, newVal) -> TextFieldAutoCompleteControle.this.AutoComplete());
 	}
 
 	private void AutoComplete() {
 		if (this.getText().length() == 0) {
-			this.contextMenu.hide();
+			contextMenu.hide();
 		} else {
 			LinkedList<String> searchResult = new LinkedList<>();
-			searchResult.addAll(this.findJunctions());
+			searchResult.addAll(findJunctions());
 
-			if (this.namesOfJunction.size() > 0) {
-				this.populatePopup(searchResult);
-				if (!this.contextMenu.isShowing()) {
-					this.contextMenu.show(this, Side.BOTTOM, 0, 0);
+			if (namesOfJunction.size() > 0) {
+				populatePopup(searchResult);
+				if (!contextMenu.isShowing()) {
+					contextMenu.show(this, Side.BOTTOM, 0, 0);
 				}
 			} else {
-				this.contextMenu.hide();
+				contextMenu.hide();
 			}
 		}
 
-		this.focusedProperty().addListener(new ChangeListener<Boolean>() {
+		focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean,
 					Boolean aBoolean2) {
-				TextFieldAutoCompleteControle.this.contextMenu.hide();
+				contextMenu.hide();
 			}
 		});
 
@@ -73,26 +72,26 @@ public class TextFieldAutoCompleteControle extends TextField {
 				@Override
 				public void handle(ActionEvent actionEvent) {
 					TextFieldAutoCompleteControle.this.setText(result);
-					TextFieldAutoCompleteControle.this.contextMenu.hide();
+					contextMenu.hide();
 				}
 			});
 			menuItems.add(item);
 		}
-		this.contextMenu.getItems().clear();
-		this.contextMenu.getItems().addAll(menuItems);
+		contextMenu.getItems().clear();
+		contextMenu.getItems().addAll(menuItems);
 
 	}
 
 	private ArrayList<String> findJunctions() {
 		ArrayList<String> searchResult = new ArrayList<>();
 		String input = this.getText().toLowerCase();
-		for (String string : this.namesOfJunction) {
+		for (String string : namesOfJunction) {
 			if (string.toLowerCase().startsWith(input)) {
 				searchResult.add(string);
 			}
 		}
 		if (searchResult.size() < 10) {
-			for (String string : this.namesOfJunction) {
+			for (String string : namesOfJunction) {
 				if (string.toLowerCase().contains(input)) {
 					searchResult.add(string);
 				}

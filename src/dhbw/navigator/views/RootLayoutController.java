@@ -2,8 +2,7 @@ package dhbw.navigator.views;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.List;
 
 import dhbw.navigator.controles.MapControle;
 import dhbw.navigator.controles.SlideBarControle;
@@ -28,13 +27,22 @@ public class RootLayoutController {
 	private SlideBarControle FlapBar;
 	private StartNavigator start;
 	private SideBarController sideBar;
+	private List<String> namesOfJunctions;
 	@FXML
 	private StackPane primaryStackPane;
 	@FXML
 	private Button region;
 
+	public List<String> getNamesOfJunctions() {
+		return namesOfJunctions;
+	}
+
+	public void setNamesOfJunctions(List<String> namesOfJunctions) {
+		this.namesOfJunctions = namesOfJunctions;
+	}
+
 	public SideBarController getSideBar() {
-		return this.sideBar;
+		return sideBar;
 	}
 
 	public void setSideBar(SideBarController sideBar) {
@@ -42,7 +50,7 @@ public class RootLayoutController {
 	}
 
 	public StartNavigator getStart() {
-		return this.start;
+		return start;
 	}
 
 	public void setStart(StartNavigator start) {
@@ -51,7 +59,7 @@ public class RootLayoutController {
 
 	private void loadData(boolean parseData) {
 		IParser parser = new Parser();
-		SortedSet<String> namesOfJunctions = new TreeSet<>();
+		List<String> buf = new ArrayList<>();
 		ArrayList<Node> node;
 		if (parseData) {
 			Osm data = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
@@ -63,33 +71,33 @@ public class RootLayoutController {
 
 		for (Node n : node) {
 			if (n.getIsJunction() == true)
-				namesOfJunctions.add(n.getName());
+				buf.add(n.getName());
 		}
-		this.primaryStackPane.getChildren().clear();
+		primaryStackPane.getChildren().clear();
 		MapControle map = new MapControle(node, false);
-		this.sideBar.setNameOfJunctions(namesOfJunctions);
-		this.addToCenter(map);
+		getStart().setNamesOfJunctions(buf);
+		addToCenter(map);
 	}
 
 	@FXML
 	public void initialize() {
-		this.loadData(false);
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				RootLayoutController.this.FlapBar = new SlideBarControle(300, RootLayoutController.this.region,
-						RootLayoutController.this.start.viewRouteWindow());
-				RootLayoutController.this.start.getPrimaryBorder().setLeft(RootLayoutController.this.FlapBar);
+				loadData(false);
+				FlapBar = new SlideBarControle(300, region, start.viewRouteWindow());
+				start.getPrimaryBorder().setLeft(FlapBar);
 			}
 		});
 	}
 
 	public void addToCenter(javafx.scene.Node node) {
-		this.primaryStackPane.getChildren().add(node);
+		primaryStackPane.getChildren().add(node);
 	}
 
 	public void removeToCenter(javafx.scene.Node node) {
-		this.primaryStackPane.getChildren().remove(node);
+		primaryStackPane.getChildren().remove(node);
 	}
 
 	/**
