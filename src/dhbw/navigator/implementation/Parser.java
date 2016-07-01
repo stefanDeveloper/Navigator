@@ -84,13 +84,11 @@ public class Parser implements IParser {
 	public void serialize(ArrayList<Node> nodes) {
 		long startTime = System.nanoTime();
 		try{
-
 			FileOutputStream fout = new FileOutputStream(path);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 			oos.writeObject(nodes);
 			oos.close();
 			System.out.println("Serialized map");
-
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
