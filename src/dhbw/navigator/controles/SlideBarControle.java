@@ -5,8 +5,10 @@ import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -19,6 +21,7 @@ public class SlideBarControle extends VBox {
 		this.setVisible(false);
 		this.setPrefHeight(0);
 		this.setMinHeight(0);
+		this.setMinWidth(0);
 		// Add nodes in the vbox
 		this.getChildren().addAll(nodes);
 		setStyle("-fx-background-color: #336699;");
@@ -40,7 +43,7 @@ public class SlideBarControle extends VBox {
 							SlideBarControle.this.setPrefWidth(size);
 						}
 					};
-
+					//((BorderPane)getParent()).getLeft().setVisible(false);
 					hidePanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent actionEvent) {
@@ -71,8 +74,11 @@ public class SlideBarControle extends VBox {
 							&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
 
 						if (SlideBarControle.this.isVisible()) {
+							SlideBarControle.this.setVisible(false);
+
 							hidePanel.play();
 
+							setVisible(false);
 						} else {
 							SlideBarControle.this.setVisible(true);
 							showPanel.play();
