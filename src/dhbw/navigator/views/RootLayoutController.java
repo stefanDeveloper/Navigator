@@ -1,5 +1,7 @@
 package dhbw.navigator.views;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -23,9 +25,11 @@ import javafx.scene.layout.StackPane;
  * @author Stefan
  *
  */
-public class RootLayoutController {
+public class RootLayoutController implements PropertyChangeListener {
 	private SlideBarControle flapBar;
-	private PathInputControle pathInput = new PathInputControle();
+	private AutoCompleteControle startPositionInput = new AutoCompleteControle("Start");
+	private AutoCompleteControle destinationPositionInput = new AutoCompleteControle("Ziel");
+
 	private NodeInformationControle originInformation = new NodeInformationControle();
 	private NodeInformationControle destinationInformation = new NodeInformationControle();
 	private PathListingControle pathListing = new PathListingControle();
@@ -61,7 +65,8 @@ public class RootLayoutController {
 			if (n.getIsJunction() == true)
 				namesOfJunctions.add(n.getName());
 		}
-		if(pathInput != null) pathInput.setNamesOfjunction(namesOfJunctions);
+		if(startPositionInput != null) startPositionInput.setNamesOfJunctions(namesOfJunctions);
+		if(destinationPositionInput != null) destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
 
 		//Populate the view
 		this.primaryStackPane.getChildren().clear();
@@ -71,13 +76,13 @@ public class RootLayoutController {
 
 	@FXML
 	public void initialize() {
-		primaryStackPane.setStyle("-fx-background-color: #666;");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				//Muss in anderne Thread ausgelagert werden
-				flapBar = new SlideBarControle(300, region,
-						pathInput,
+				flapBar = new SlideBarControle(325, region,
+						startPositionInput,
+						destinationPositionInput,
 						originInformation,
 						destinationInformation,
 						pathListing);
@@ -92,9 +97,44 @@ public class RootLayoutController {
 				test.add(nodes.get(2));
 				test.add(nodes.get(3));
 				pathListing.setPath(test);
-				originInformation.setNode(test.get(0));
+			}
+
+
+		});
+
+		destinationPositionInput.addPropertyChangeListener("text", e -> {
+			System.out.println("Ziel: " +e.getNewValue());
+			Node n = getNodeByName((String)e.getNewValue(), nodes);
+			if(n!=null) {
+				System.out.println(" Node: " + n.getName() + ", Id: " + n.getId());
+				destinationInformation.setNode(n);
+			}
+			if(e.getNewValue().equals(""))
+			{
+				destinationInformation.setNode(null);
+			}
+        });
+		startPositionInput.addPropertyChangeListener("text", e -> {
+			System.out.println("Start: " +e.getNewValue());
+			Node n = getNodeByName((String)e.getNewValue(), nodes);
+			if(n!=null)
+			{
+				System.out.println(" Node: " + n.getName() + ", Id: " + n.getId());
+				originInformation.setNode(n);
+			}if(e.getNewValue().equals(""))
+			{
+				originInformation.setNode(null);
 			}
 		});
+	}
+
+	private Node getNodeByName(String name, ArrayList<Node> nodes)
+	{
+		for(Node n: nodes)
+		{
+			if(n.getName().equals(name)) return n;
+		}
+		return null;
 	}
 
 	public void addToCenter(javafx.scene.Node node) {
@@ -128,5 +168,10 @@ public class RootLayoutController {
 
 	public void setNodes(ArrayList<Node> nodes) {
 		this.nodes = nodes;
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+
 	}
 }
