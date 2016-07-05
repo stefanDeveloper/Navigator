@@ -22,42 +22,48 @@ import javafx.scene.control.TextField;
  *
  */
 public class TextFieldAutoCompleteControle extends TextField {
-	private SortedSet<String> namesOfJunction;
+	private SortedSet<String> context;
 	private ContextMenu contextMenu;
 
-	public TextFieldAutoCompleteControle(SortedSet<String> pNamesOfJunctions) {
-		this.namesOfJunction = pNamesOfJunctions;
+	public TextFieldAutoCompleteControle() {
 		this.contextMenu = new ContextMenu();
 		this.setContextMenu(this.contextMenu);
 		this.textProperty().addListener(
 				(ChangeListener<String>) (o, oldVal, newVal) -> TextFieldAutoCompleteControle.this.AutoComplete());
 	}
 
+	public void setContext(SortedSet<String> context)
+	{
+		this.context = context;
+	}
+
 	private void AutoComplete() {
-		if (this.getText().length() == 0) {
-			this.contextMenu.hide();
-		} else {
-			LinkedList<String> searchResult = new LinkedList<>();
-			searchResult.addAll(this.findJunctions());
-
-			if (this.namesOfJunction.size() > 0) {
-				this.populatePopup(searchResult);
-				if (!this.contextMenu.isShowing()) {
-					this.contextMenu.show(this, Side.BOTTOM, 0, 0);
-				}
-			} else {
+		if(context != null && context.size()> 0)
+		{
+			if (this.getText().length() == 0) {
 				this.contextMenu.hide();
+			} else {
+				LinkedList<String> searchResult = new LinkedList<>();
+				searchResult.addAll(this.findJunctions());
+
+				if (this.context.size() > 0) {
+					this.populatePopup(searchResult);
+					if (!this.contextMenu.isShowing()) {
+						this.contextMenu.show(this, Side.BOTTOM, 0, 0);
+					}
+				} else {
+					this.contextMenu.hide();
+				}
 			}
+
+			this.focusedProperty().addListener(new ChangeListener<Boolean>() {
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean,
+									Boolean aBoolean2) {
+					TextFieldAutoCompleteControle.this.contextMenu.hide();
+				}
+			});
 		}
-
-		this.focusedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean,
-					Boolean aBoolean2) {
-				TextFieldAutoCompleteControle.this.contextMenu.hide();
-			}
-		});
-
 	}
 
 	private void populatePopup(List<String> searchResult) {
@@ -86,13 +92,13 @@ public class TextFieldAutoCompleteControle extends TextField {
 	private ArrayList<String> findJunctions() {
 		ArrayList<String> searchResult = new ArrayList<>();
 		String input = this.getText().toLowerCase();
-		for (String string : this.namesOfJunction) {
+		for (String string : this.context) {
 			if (string.toLowerCase().startsWith(input)) {
 				searchResult.add(string);
 			}
 		}
 		if (searchResult.size() < 10) {
-			for (String string : this.namesOfJunction) {
+			for (String string : this.context) {
 				if (string.toLowerCase().contains(input)) {
 					searchResult.add(string);
 				}
