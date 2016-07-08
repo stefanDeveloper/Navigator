@@ -20,6 +20,7 @@ import dhbw.navigator.start.StartNavigator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.StackPane;
 import net.aksingh.owmjapis.CurrentWeather;
 
@@ -72,8 +73,8 @@ public class RootLayoutController implements PropertyChangeListener {
 			if (n.getIsJunction() == true)
 				namesOfJunctions.add(n.getName());
 		}
-		if(startPositionInput != null) startPositionInput.setNamesOfJunctions(namesOfJunctions);
-		if(destinationPositionInput != null) destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
+		startPositionInput.setNamesOfJunctions(namesOfJunctions);
+		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
 
 		//Populate the view
 		this.primaryStackPane.getChildren().clear();
@@ -90,11 +91,12 @@ public class RootLayoutController implements PropertyChangeListener {
 				flapBar = new SlideBarControle(325, region,
 						startPositionInput,
 						destinationPositionInput,
+						new Separator(),
 						originInformation,
 						destinationInformation,
 						pathListing);
 				start.getPrimaryBorder().setLeft(flapBar);
-				loadData(true);
+				loadData(false);
 				region.fire();
 			}
 		});

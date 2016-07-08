@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -22,9 +23,11 @@ public class SlideBarControle extends VBox {
 		this.setPrefHeight(0);
 		this.setMinHeight(0);
 		this.setMinWidth(0);
+		setPadding(new Insets(5,0,0,0));
+		setSpacing(5);
 		// Add nodes in the vbox
 		this.getChildren().addAll(nodes);
-		setStyle("-fx-background-color: #336699;");
+		setStyle("-fx-background-color: #FFF;");
 
 		if (controlButton.getProperties() != null) {
 
