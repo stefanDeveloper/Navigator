@@ -8,7 +8,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -32,24 +31,21 @@ public class AutoCompleteControle extends GridPane {
 		this.clearButton = new Button("X");
 		this.textField = new TextFieldAutoCompleteControle();
 		this.clearButton.setVisible(false);
+		//this.getChildren().addAll(this.label, this.textField, this.clearButton);
 
-		clearButton.prefHeightProperty().bind(textField.heightProperty());
-
-		setPadding(new Insets(0,0,0,5));
-
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			ColumnConstraints col = new ColumnConstraints();
+			col.setPercentWidth(33.3);
 			getColumnConstraints().add(col);
 		}
 
 		getColumnConstraints().get(0).setPercentWidth(15);
-		getColumnConstraints().get(1).setPercentWidth(70);
-		getColumnConstraints().get(2).setPercentWidth(2.5);
-		getColumnConstraints().get(3).setPercentWidth(12.5);
+		getColumnConstraints().get(1).setPercentWidth(75);
+		getColumnConstraints().get(2).setPercentWidth(10);
 
 		add(label, 0, 0);
 		add(textField, 1 , 0);
-		add(clearButton, 3, 0);
+		add(clearButton, 2, 0);
 
 		this.clearButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -73,27 +69,28 @@ public class AutoCompleteControle extends GridPane {
 		});
 	}
 
-	public void setText(String value)
-	{
-		//Fire event that text changed
+	public void setText(String value) {
+		// Fire event that text changed
 	}
 
 	public String getText() {
-		return this.textField.getText();
+		return textField.getText();
 	}
 
 	public void setNamesOfJunctions(SortedSet<String> namesOfJunctions) {
 		this.namesOfJunctions = namesOfJunctions;
-		this.textField.setContext(namesOfJunctions);
+		textField.setContext(namesOfJunctions);
 	}
 
-	public void addPropertyChangeListener(String x, PropertyChangeListener l)
-	{
-		changes.addPropertyChangeListener( l );
+	public void addPropertyChangeListener(String x, PropertyChangeListener l) {
+		changes.addPropertyChangeListener(l);
 	}
 
-	public void removePropertyChangeListener( PropertyChangeListener l )
-	{
-		changes.removePropertyChangeListener( l );
+	public void removePropertyChangeListener(PropertyChangeListener l) {
+		changes.removePropertyChangeListener(l);
+	}
+
+	public void clearNode() {
+
 	}
 }

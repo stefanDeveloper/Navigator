@@ -14,34 +14,42 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * SlideBar extends VBox
+ *
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ *
+ */
 public class SlideBarControle extends VBox {
 	private double expandedSize;
 
 	public SlideBarControle(double expandedSize, final Button controlButton, Node... nodes) {
-		this.setExpandedSize(expandedSize);
-		this.setVisible(false);
-		this.setPrefHeight(0);
-		this.setMinHeight(0);
-		this.setMinWidth(0);
+		setExpandedSize(expandedSize);
+		setVisible(false);
+		setPrefHeight(0);
+		setMinHeight(0);
+		setMinWidth(0);
 		setPadding(new Insets(5,0,0,0));
 		setSpacing(5);
 		// Add nodes in the vbox
-		this.getChildren().addAll(nodes);
-		setStyle("-fx-background-color: #FFF;");
+		getChildren().addAll(nodes);
+		setStyle("-fx-background-color: #336699;");
 
 		if (controlButton.getProperties() != null) {
-
+			// Set EventHanlder to controlButton, if it's clicked, VBox is
+			// showing
 			controlButton.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent actionEvent) {
 					// Create an animation to hide the panel.
 					final Animation hidePanel = new Transition() {
 						{
-							this.setCycleDuration(Duration.millis(250));
+							setCycleDuration(Duration.millis(250));
 						}
 
 						@Override
 						protected void interpolate(double frac) {
+							// Set size after click
 							final double size = SlideBarControle.this.getExpandedSize() * (1.0 - frac);
 							SlideBarControle.this.setPrefWidth(size);
 						}
@@ -57,11 +65,12 @@ public class SlideBarControle extends VBox {
 					// Create an animation to show the panel.
 					final Animation showPanel = new Transition() {
 						{
-							this.setCycleDuration(Duration.millis(250));
+							setCycleDuration(Duration.millis(250));
 						}
 
 						@Override
 						protected void interpolate(double frac) {
+							// Set size after click
 							final double size = SlideBarControle.this.getExpandedSize() * frac;
 							SlideBarControle.this.setPrefWidth(size);
 						}
@@ -70,12 +79,13 @@ public class SlideBarControle extends VBox {
 					showPanel.onFinishedProperty().set(new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent actionEvent) {
+
 						}
 					});
 
 					if (showPanel.statusProperty().get() == Animation.Status.STOPPED
 							&& hidePanel.statusProperty().get() == Animation.Status.STOPPED) {
-
+						// After animation show or hide panel
 						if (SlideBarControle.this.isVisible()) {
 							SlideBarControle.this.setVisible(false);
 
@@ -96,7 +106,7 @@ public class SlideBarControle extends VBox {
 	 * @return the expandedSize
 	 */
 	public double getExpandedSize() {
-		return this.expandedSize;
+		return expandedSize;
 	}
 
 	/**

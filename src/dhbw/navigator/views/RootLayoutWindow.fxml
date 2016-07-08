@@ -11,7 +11,7 @@
         <menus>
             <Menu mnemonicParsing="false">
                <graphic>
-                  <Button fx:id="region" mnemonicParsing="false" text="Button" />
+                  <Button fx:id="button" mnemonicParsing="false" text="Button" />
                </graphic>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
