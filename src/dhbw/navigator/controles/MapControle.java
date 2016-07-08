@@ -15,14 +15,14 @@ import javafx.scene.paint.Color;
 
 public class MapControle extends Canvas {
 
-	ArrayList<Node> nodeList;
+	ArrayList<Node> nodeList = new ArrayList<>();
 	double xSize = 0;
 	double ySize = 0;
 	StackPane parent = null;
 
-	public MapControle(ArrayList<Node> nodeList, boolean route) {
+	public MapControle(ArrayList<Node> pNodeList, boolean route) {
 		GraphicsContext graphic = this.getGraphicsContext2D();
-		this.nodeList = nodeList;
+		nodeList = pNodeList;
 
 		if (route)
 			graphic.setStroke(Color.AQUA);
@@ -114,8 +114,6 @@ public class MapControle extends Canvas {
 				multi = xMulti;
 			}
 
-			// multi = 500;
-			// y = 600;
 			int diameter = 10;
 
 			for (Node n : this.nodeList) {

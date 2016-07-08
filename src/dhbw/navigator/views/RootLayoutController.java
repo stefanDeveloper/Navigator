@@ -10,14 +10,18 @@ import java.util.TreeSet;
 
 import dhbw.navigator.controles.*;
 import dhbw.navigator.generated.Osm;
+import dhbw.navigator.implementation.Dijkstra;
 import dhbw.navigator.implementation.Parser;
+import dhbw.navigator.interfaces.IDijkstra;
 import dhbw.navigator.interfaces.IParser;
+import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
 import dhbw.navigator.start.StartNavigator;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import net.aksingh.owmjapis.CurrentWeather;
 
 /**
  * Controller for RootLayout.fxml
@@ -29,10 +33,13 @@ public class RootLayoutController implements PropertyChangeListener {
 	private SlideBarControle flapBar;
 	private AutoCompleteControle startPositionInput = new AutoCompleteControle("Start");
 	private AutoCompleteControle destinationPositionInput = new AutoCompleteControle("Ziel");
-
+	private Node startNode;
+	private Node endNode;
 	private NodeInformationControle originInformation = new NodeInformationControle();
 	private NodeInformationControle destinationInformation = new NodeInformationControle();
 	private PathListingControle pathListing = new PathListingControle();
+	private Button startButton = new Button("Start");
+
 
 	private StartNavigator start;
 
@@ -87,43 +94,42 @@ public class RootLayoutController implements PropertyChangeListener {
 						destinationInformation,
 						pathListing);
 				start.getPrimaryBorder().setLeft(flapBar);
-				loadData(false);
+				loadData(true);
 				region.fire();
-
-				//Some test stuff
-				ArrayList<Node> test = new ArrayList<Node>();
-				test.add(nodes.get(0));
-				test.add(nodes.get(1));
-				test.add(nodes.get(2));
-				test.add(nodes.get(3));
-				pathListing.setPath(test);
 			}
-
-
 		});
 
+
 		destinationPositionInput.addPropertyChangeListener("text", e -> {
-			System.out.println("Ziel: " +e.getNewValue());
-			Node n = getNodeByName((String)e.getNewValue(), nodes);
-			if(n!=null) {
-				System.out.println(" Node: " + n.getName() + ", Id: " + n.getId());
-				destinationInformation.setNode(n);
-			}
 			if(e.getNewValue().equals(""))
 			{
 				destinationInformation.setNode(null);
+				setEndNode(null);
+			}
+			else
+			{
+				System.out.println("Ziel: " +e.getNewValue());
+				Node n = getNodeByName((String)e.getNewValue(), nodes);
+				if(n!=null) {
+					setEndNode(n);
+				}
 			}
         });
 		startPositionInput.addPropertyChangeListener("text", e -> {
-			System.out.println("Start: " +e.getNewValue());
-			Node n = getNodeByName((String)e.getNewValue(), nodes);
-			if(n!=null)
-			{
-				System.out.println(" Node: " + n.getName() + ", Id: " + n.getId());
-				originInformation.setNode(n);
-			}if(e.getNewValue().equals(""))
+			if(e.getNewValue().equals(""))
 			{
 				originInformation.setNode(null);
+				setStartNode(null);
+			}
+			else
+			{
+				System.out.println("Start: " +e.getNewValue());
+				Node n = getNodeByName((String)e.getNewValue(), nodes);
+				if(n!=null)
+				{
+					setStartNode(n);
+
+				}
 			}
 		});
 	}
@@ -173,5 +179,31 @@ public class RootLayoutController implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 
+	}
+
+	public void setStartNode(Node startNode) {
+		this.startNode = startNode;
+		originInformation.setNode(startNode);
+		nodeChanged();
+	}
+
+	public void setEndNode(Node endNode) {
+		this.endNode = endNode;
+		destinationInformation.setNode(endNode);
+		nodeChanged();
+	}
+
+	void nodeChanged()
+	{
+		if(startNode!=null && endNode !=null)
+		{
+			//Start dijkstra
+			IDijkstra dijkstra = new Dijkstra();
+			ArrayList<Node> path = dijkstra.FindPath(startNode, endNode);
+			pathListing.setPath(path);
+			for (int i = 0; i < path.size(); i++) {
+				System.out.println(path.get(i).getName());
+			}
+		}
 	}
 }
