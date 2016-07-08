@@ -27,6 +27,8 @@ public class NodeInformationControle extends VBox {
 
     public NodeInformationControle()
     {
+        setPadding(new Insets(0,0,0,5));
+
         //Define grid
         GridPane grid = new GridPane();
 
