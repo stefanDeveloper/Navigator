@@ -1,38 +1,27 @@
 package dhbw.navigator.controles;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.SortedSet;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.SortedSet;
 
 public class AutoCompleteControle extends GridPane {
 	private Button clearButton;
 	private TextFieldAutoCompleteControle textField;
-	private Label label;
-	private SortedSet<String> namesOfJunctions;
 	private PropertyChangeSupport changes = new PropertyChangeSupport( this );
-
-
-
 	private String text;
 
 	public AutoCompleteControle(String labelText) {
-		label = new Label(labelText);
+		Label label = new Label(labelText);
 		clearButton = new Button("X");
 		textField = new TextFieldAutoCompleteControle();
 		clearButton.setVisible(false);
-		setPadding(new Insets(0,0,0,5));
+		setPadding(new Insets(5,0,0,5));
 
 
 		for (int i = 0; i < 4; i++) {
@@ -49,50 +38,32 @@ public class AutoCompleteControle extends GridPane {
 		add(textField, 1 , 0);
 		add(clearButton, 3, 0);
 
-		this.clearButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				AutoCompleteControle.this.textField.setText("");
-			}
-		});
-		this.textField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (AutoCompleteControle.this.textField.getText().length() > 0
-						&& !(AutoCompleteControle.this.textField.getText().equals(" "))) {
-					AutoCompleteControle.this.clearButton.setVisible(true);
+		this.clearButton.setOnAction(event -> AutoCompleteControle.this.textField.setText(""));
+		this.textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (AutoCompleteControle.this.textField.getText().length() > 0
+                    && !(AutoCompleteControle.this.textField.getText().equals(" "))) {
+                AutoCompleteControle.this.clearButton.setVisible(true);
 
-				} else if (AutoCompleteControle.this.textField.getText().length() == 0) {
-					AutoCompleteControle.this.clearButton.setVisible(false);
-				}
-				setText(newValue);
-				changes.firePropertyChange("text", oldValue, newValue);
-			}
-		});
-	}
-
-	public void setText(String value) {
-		// Fire event that text changed
-	}
-
-	public String getText() {
-		return textField.getText();
+            } else if (AutoCompleteControle.this.textField.getText().length() == 0) {
+                AutoCompleteControle.this.clearButton.setVisible(false);
+            }
+            changes.firePropertyChange("text", oldValue, newValue);
+        });
 	}
 
 	public void setNamesOfJunctions(SortedSet<String> namesOfJunctions) {
-		this.namesOfJunctions = namesOfJunctions;
 		textField.setContext(namesOfJunctions);
 	}
 
-	public void addPropertyChangeListener(String x, PropertyChangeListener l) {
+	public void addPropertyChangeListener(PropertyChangeListener l) {
 		changes.addPropertyChangeListener(l);
 	}
 
-	public void removePropertyChangeListener(PropertyChangeListener l) {
-		changes.removePropertyChangeListener(l);
+	public String getText() {
+		return text;
 	}
 
-	public void clearNode() {
-
+	public void setText(String text) {
+		this.text = text;
 	}
 }

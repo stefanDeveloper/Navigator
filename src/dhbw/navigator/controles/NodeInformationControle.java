@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import net.aksingh.owmjapis.CurrentWeather;
-import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
 
 import java.text.DecimalFormat;
@@ -19,19 +18,24 @@ import java.text.DecimalFormat;
  */
 public class NodeInformationControle extends VBox {
 
+    GridPane grid = new GridPane();
+
     OpenWeatherMap owm;
     private Label nodeName = new Label();
     private Label weatherLabel = new Label();
     private Label tempLabel = new Label();
     private ImageView weatherIcon = new ImageView();
 
-    public NodeInformationControle()
+    private double height;
+
+    public NodeInformationControle(double pHeight)
     {
-        setPadding(new Insets(0,0,0,5));
+        this.height = pHeight;
+        setPadding(new Insets(5,0,0,0));
+        setSpacing(3);
 
         //Define grid
-        GridPane grid = new GridPane();
-
+        grid.setPadding(new Insets(0,0,0,5));
         for (int i = 0; i < 3; i++) {
             RowConstraints row = new RowConstraints();
             row.setPercentHeight(33.3);
@@ -42,21 +46,12 @@ public class NodeInformationControle extends VBox {
         columnLeft.setPercentWidth(66);
         columnRight.setPercentWidth(33);
         grid.getColumnConstraints().addAll(columnLeft, columnRight);
-        weatherIcon.setFitWidth(75);
-        weatherIcon.setFitHeight(75);
-
-        /**
-        //Testdata
-        nodeName.setText("TESTNAME");
-        weatherLabel.setText("Wetter: Sonnig");
-        tempLabel.setText("Temperatur: 99°C");
-         **/
+        weatherIcon.setFitWidth(height);
+        weatherIcon.setFitHeight(height);
 
         StackPane sp = new StackPane();
         sp.setAlignment(weatherIcon, Pos.CENTER);
         sp.getChildren().add(weatherIcon);
-
-
 
         grid.getChildren().add(nodeName);
         grid.getChildren().add(sp);
@@ -70,11 +65,12 @@ public class NodeInformationControle extends VBox {
         grid.setRowSpan(sp,3);
 
 
-        getChildren().addAll(grid, new Separator());
+        getChildren().addAll(new Separator(), grid);
 
         setActive(false);
         owm = new OpenWeatherMap(new secrets().WeatherAPI);
-        //setMinHeight(0);
+         setMinHeight(0);
+        grid.setMinHeight(0);
     }
 
     public void setNode(Node node)
@@ -84,11 +80,11 @@ public class NodeInformationControle extends VBox {
         {
             nodeName.setText(node.getName());
             setActive(true);
-            int weatherCode = 650;
+            int weatherCode = 960;
             double temperature = 90;
-            if(false) {
+            if(false && keyAvailable){
                 CurrentWeather weather = owm.currentWeatherByCoordinates(node.getLat().floatValue(), node.getLon().floatValue());
-               weatherCode = weather.getWeatherInstance(0).getWeatherCode();
+                weatherCode = weather.getWeatherInstance(0).getWeatherCode();
                 temperature = weather.getMainInstance().getTemperature();
             }
 
@@ -125,13 +121,16 @@ public class NodeInformationControle extends VBox {
 
                 if(fileName!="none")
                 {
-                    Image image = new Image("file:images/png/"+ fileName +".png");
-                    weatherIcon.setImage(image);
+                    try{
+                        Image image = new Image("file:images/png/"+ fileName +".png");
+                        weatherIcon.setImage(image);
+                    }catch(Exception ex){
+                        System.out.println(ex);
+                    }
                 }
                 String tmpWeather = "Wetter: " + weatherName;
 
                 temperature = ((temperature - 32)*5)/9;
-
                 DecimalFormat f = new DecimalFormat("##.0");
                 String tmpTemperature = "Temperatur: " + f.format(temperature) + "°C";
                 weatherLabel.setText(tmpWeather);
@@ -142,19 +141,28 @@ public class NodeInformationControle extends VBox {
         {
             setActive(false);
         }
+    }
 
+    public void clearNode()
+    {
+        setActive(false);
     }
 
     void setActive(boolean isActive)
     {
         if(isActive)
         {
-            setMaxHeight(900);
+            setPrefHeight(height);
+            grid.setPrefHeight(height - 5);
+
             setVisible(true);
+
         }else{
-            setMaxHeight(0);
+            setPrefHeight(0);
+            setHeight(0);
+
+            grid.setPrefHeight(0);
             setVisible(false);
         }
-
     }
 }

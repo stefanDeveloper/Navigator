@@ -15,20 +15,14 @@ import javafx.scene.paint.Color;
 
 public class MapControle extends Canvas {
 
-	ArrayList<Node> nodeList = new ArrayList<>();
+	ArrayList<Node> nodeList;
 	double xSize = 0;
 	double ySize = 0;
 	StackPane parent = null;
 
-	public MapControle(ArrayList<Node> pNodeList, boolean route) {
-		GraphicsContext graphic = this.getGraphicsContext2D();
-		nodeList = pNodeList;
-
-		if (route)
-			graphic.setStroke(Color.AQUA);
-
+	public MapControle()
+	{
 		this.parentProperty().addListener(new ChangeListener<Parent>() {
-
 			@Override
 			public void changed(ObservableValue<? extends Parent> ov, Parent oldP, Parent newP) {
 				if (newP != null) {
@@ -39,7 +33,7 @@ public class MapControle extends Canvas {
 					MapControle.this.parent.heightProperty().addListener(new ChangeListener<Number>() {
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
-								Number newValue) {
+											Number newValue) {
 							MapControle.this.updateGraph();
 
 						}
@@ -47,10 +41,9 @@ public class MapControle extends Canvas {
 					MapControle.this.parent.widthProperty().addListener(new ChangeListener<Number>() {
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
-								Number newValue) {
+											Number newValue) {
 
 							MapControle.this.updateGraph();
-
 						}
 					});
 				}
@@ -58,8 +51,13 @@ public class MapControle extends Canvas {
 		});
 	}
 
+	public void setOriginMap(ArrayList<Node> pNodeList) {
+		GraphicsContext graphic = this.getGraphicsContext2D();
+		nodeList = pNodeList;
+	}
+
 	void updateGraph() {
-		if (this.parent != null) {
+		if (this.parent != null && nodeList!=null) {
 			this.xSize = this.parent.getWidth();
 			this.ySize = this.parent.getHeight();
 			if (this.xSize < this.ySize) {
