@@ -9,11 +9,6 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-            <Menu mnemonicParsing="false">
-               <graphic>
-                  <Button fx:id="button" mnemonicParsing="false" text="Button" />
-               </graphic>
-            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleInfo" text="Info" />

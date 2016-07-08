@@ -2,6 +2,7 @@ package dhbw.navigator.controles;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,6 +15,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+
 /**
  * SlideBar extends VBox
  *
@@ -22,6 +27,13 @@ import javafx.util.Duration;
  */
 public class SlideBarControle extends VBox {
 	private double expandedSize;
+	private boolean isExpanded;
+
+	private PropertyChangeSupport changes = new PropertyChangeSupport( this );
+	public void addPropertyChangeListener(PropertyChangeListener l) {
+		changes.addPropertyChangeListener(l);
+	}
+
 
 	public SlideBarControle(double expandedSize, final Button controlButton, Node... nodes) {
 		setExpandedSize(expandedSize);
@@ -31,7 +43,7 @@ public class SlideBarControle extends VBox {
 		setMinWidth(0);
 		setPadding(new Insets(5,0,0,0));
 		setSpacing(5);
-		// Add nodes in the vbox
+		// Add nodes to the vbox
 		getChildren().addAll(nodes);
 		setStyle("-fx-background-color: #FFF;");
 
@@ -50,7 +62,7 @@ public class SlideBarControle extends VBox {
 						@Override
 						protected void interpolate(double frac) {
 							// Set size after click
-							final double size = SlideBarControle.this.getExpandedSize() * (1.0 - frac);
+							final double size = getExpandedSize() * (1.0 - frac);
 							SlideBarControle.this.setPrefWidth(size);
 						}
 					};
@@ -89,13 +101,15 @@ public class SlideBarControle extends VBox {
 						if (SlideBarControle.this.isVisible()) {
 							SlideBarControle.this.setVisible(false);
 
+							isExpanded = false;
 							hidePanel.play();
-
 							setVisible(false);
 						} else {
 							SlideBarControle.this.setVisible(true);
+							isExpanded = true;
 							showPanel.play();
 						}
+						changes.firePropertyChange("isExpanded", !isExpanded, isExpanded);
 					}
 				}
 			});
