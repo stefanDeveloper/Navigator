@@ -33,7 +33,7 @@ public class SlideBarControle extends VBox {
 		setSpacing(5);
 		// Add nodes in the vbox
 		getChildren().addAll(nodes);
-		setStyle("-fx-background-color: #336699;");
+		setStyle("-fx-background-color: #FFF;");
 
 		if (controlButton.getProperties() != null) {
 			// Set EventHanlder to controlButton, if it's clicked, VBox is

@@ -101,7 +101,7 @@ public class RootLayoutController implements PropertyChangeListener {
 			@Override
 			public void run() {
 				//Muss in anderne Thread ausgelagert werden
-				flapBar = new SlideBarControle(325, region,
+				flapBar = new SlideBarControle(325, button,
 						startPositionInput,
 						destinationPositionInput,
 						new Separator(),
