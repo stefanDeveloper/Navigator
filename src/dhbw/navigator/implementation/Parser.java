@@ -1,6 +1,7 @@
 package dhbw.navigator.implementation;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,7 +33,6 @@ public class Parser implements IParser {
 			@Override
 			public int compare(Osm.Way way2, Osm.Way way1)
 			{
-
 				return  ((Long)way1.getNd().get(0).getRef()).compareTo(way2.getNd().get(0).getRef());
 			}
 		});
@@ -50,6 +50,17 @@ public class Parser implements IParser {
 		return result;
 	}
 
+
+	void testTest(Node start, ArrayList<Node> test) {
+		if (!test.contains(start)) {
+			test.add(start);
+			for (Node n : start.getNeighbours()) {
+
+				testTest(n, test);
+			}
+		}
+	}
+
 	@Override
 	public ArrayList<Node> deserialize() {
 		long startTime = System.nanoTime();
@@ -63,7 +74,11 @@ public class Parser implements IParser {
 			nodes = (ArrayList<Node>) ois.readObject();
 			ois.close();
 			printDuration(startTime, "Deserialisation");
-			return nodes;
+
+			ArrayList<Node> test = new ArrayList<>();
+
+			testTest(nodes.get(200), test);
+			return test;
 
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -76,7 +91,7 @@ public class Parser implements IParser {
 	void printDuration(long startTime, String description)
 	{
 		long endTime = System.nanoTime();
-		long duration = (  ((endTime - startTime)/1000000));
+		long duration = (((endTime - startTime)/1000000));
 		System.out.println("TIMER: " + description + " ,duration: " +duration + " ms.");
 	}
 
