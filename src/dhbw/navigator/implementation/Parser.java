@@ -78,7 +78,7 @@ public class Parser implements IParser {
 			ArrayList<Node> test = new ArrayList<>();
 
 			testTest(nodes.get(200), test);
-			return test;
+			return nodes;
 
 		}catch(Exception ex){
 			ex.printStackTrace();
