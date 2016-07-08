@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import dhbw.navigator.models.Node;
 
 /**
- * Created by Konrad Mueller on 22.06.2016.
+ * 
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ *
  */
 public interface IDijkstra {
 
-    public ArrayList<Node> FindPath(Node start, Node end);
+	public ArrayList<Node> FindPath(Node start, Node end);
 }

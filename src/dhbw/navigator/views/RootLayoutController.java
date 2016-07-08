@@ -98,11 +98,11 @@ public class RootLayoutController implements PropertyChangeListener {
 				flapBar = new SlideBarControle(325, button, startPositionInput, destinationPositionInput,
 						originInformation, destinationInformation, pathListing);
 				start.getPrimaryBorder().setLeft(flapBar);
-				loadData(true);
+				loadData(false);
 				button.fire();
 			}
 		});
-		// Add PropertyChangeListener to get
+		// Add PropertyChangeListener to get and set Value
 		destinationPositionInput.addPropertyChangeListener("text", e -> {
 			if (e.getNewValue().equals("")) { // end node selected
 				destinationInformation.setNode(null); // return null?
@@ -115,6 +115,7 @@ public class RootLayoutController implements PropertyChangeListener {
 				}
 			}
 		});
+		// Add PropertyChangeListener to get and set Value
 		startPositionInput.addPropertyChangeListener("text", e -> {
 			if (e.getNewValue().equals("")) {
 				originInformation.setNode(null);
@@ -160,7 +161,7 @@ public class RootLayoutController implements PropertyChangeListener {
 	@FXML
 	private void handleInfo() {
 		UtilityViews.Information("Navigator \n" + "Gruppenprojekt Programmieren\n" + "2. Semester\n"
-				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad M�ller");
+				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad Müller");
 	}
 
 	public ArrayList<Node> getNodes() {
