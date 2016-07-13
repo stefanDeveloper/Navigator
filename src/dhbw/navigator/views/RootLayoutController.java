@@ -38,7 +38,6 @@ public class RootLayoutController {
 	private NodeInformationControle originInformation = new NodeInformationControle(90);
 	private NodeInformationControle destinationInformation = new NodeInformationControle(90);
 	private PathListingControle pathListing = new PathListingControle();
-	private Button startButton = new Button("Start");
 	private MapControle map = new MapControle();
 
 	static private String path = System.getProperty("user.home") + "\\desktop\\map.ser";
@@ -101,6 +100,7 @@ public class RootLayoutController {
 
 
 		Platform.runLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
 				//Muss in anderne Thread ausgelagert werden

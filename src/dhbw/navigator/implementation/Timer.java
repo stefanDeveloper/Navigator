@@ -1,7 +1,9 @@
 package dhbw.navigator.implementation;
 
 /**
- * Created by Konrad Mueller on 12.07.2016.
+ * Timer
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ *
  */
 public class Timer {
     private long startTime;

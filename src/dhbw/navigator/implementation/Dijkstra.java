@@ -8,6 +8,14 @@ import dhbw.navigator.interfaces.IDijkstra;
 import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
 
+/**
+ * Dijkstra
+ * Implementation of the Dijkstra Algorithm
+ * 
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ *
+ */
+
 public class Dijkstra implements IDijkstra {
 
 	private ArrayList<Node> visited;
