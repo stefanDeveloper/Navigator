@@ -1,12 +1,8 @@
 package dhbw.navigator.views;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.SortedSet;
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.*;
 
 import dhbw.navigator.controles.AutoCompleteControle;
 import dhbw.navigator.controles.MapControle;
@@ -25,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 
 /**
@@ -34,18 +29,19 @@ import javafx.scene.layout.*;
  * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
  *
  */
-public class RootLayoutController implements PropertyChangeListener {
+public class RootLayoutController {
 	private SlideBarControle flapBar;
 	private AutoCompleteControle startPositionInput = new AutoCompleteControle("Start");
 	private AutoCompleteControle destinationPositionInput = new AutoCompleteControle("Ziel");
 	private Node startNode;
-	private Node endNode;
+	private Node destinationNode;
 	private NodeInformationControle originInformation = new NodeInformationControle(90);
 	private NodeInformationControle destinationInformation = new NodeInformationControle(90);
 	private PathListingControle pathListing = new PathListingControle();
 	private Button startButton = new Button("Start");
 	private MapControle map = new MapControle();
 
+	static private String path = System.getProperty("user.home") + "\\desktop\\map.ser";
 
 	private StartNavigator start;
 
@@ -62,28 +58,37 @@ public class RootLayoutController implements PropertyChangeListener {
 		this.start = start;
 	}
 
+
 	/**
-	 * load Xml Data
-	 *
-	 *            true for parse
+	 * Load the map data. Data will be parsed form source if serialised data is not avaliable.
+	 * @param parseData Boolean, set true to parse the data from the source again, false to deserialise already parsed data.
 	 */
 	private void loadData(Boolean parseData) {
 		IParser parser = new Parser();
+		// Set default location
+
 		// Check boolean
 		if (parseData) {
 			// Parse file and serialize it
 			Osm data = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
 			nodes = parser.getNodes(data);
-			parser.serialize(nodes);
+			parser.serialize(nodes, path);
 		} else {
-			nodes = parser.deserialize();
+			nodes = parser.deserialize(path);
+			if(nodes==null){
+				System.out.println("Deserialization failed.");
+				Osm data = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
+				nodes = parser.getNodes(data);
+				parser.serialize(nodes, path);
+			}
 		}
 		SortedSet<String> namesOfJunctions = new TreeSet<>();
 		for (Node n : nodes) {
-			if (n.getIsJunction() == true)
+			if (n.getIsJunction())
 				// Add names of Junction for Context Menu
 				namesOfJunctions.add(n.getName());
 		}
+
 		startPositionInput.setNamesOfJunctions(namesOfJunctions);
 		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
 
@@ -93,6 +98,8 @@ public class RootLayoutController implements PropertyChangeListener {
 
 	@FXML
 	public void initialize() {
+
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -120,11 +127,9 @@ public class RootLayoutController implements PropertyChangeListener {
 						destinationInformation,
 						pathListing);
 				start.getPrimaryBorder().setLeft(flapBar);
-				loadData(false);
 				btn.fire();
-
+				loadData(false);
 				flapBar.addPropertyChangeListener(isExpanded -> {
-					System.out.println(isExpanded.getNewValue());
 					if((boolean)isExpanded.getNewValue()){
 						 btn.setText("<");
 					}else{
@@ -132,50 +137,83 @@ public class RootLayoutController implements PropertyChangeListener {
 					}
 				});
 			}
+
 		});
-		// Add PropertyChangeListener to get and set Value
+		// Add PropertyChangeListener to destinationPositionInput controle.
 		destinationPositionInput.addPropertyChangeListener(e -> {
-			if (e.getNewValue().equals("")) { // end node selected
-				destinationInformation.setNode(null); // return null?
-				setEndNode(null);
+			if (isNewStringEmpty(e)) { // end node selected
+				destinationInformation.clearNode();
+				setDestinationNode(null);
 			} else {
-				System.out.println("Ziel: " + e.getNewValue());
 				Node n = getNodeByName((String) e.getNewValue(), nodes);
 				if (n != null) {
-					setEndNode(n);
+					setDestinationNode(n);
 				}
 			}
 		});
-		// Add PropertyChangeListener to get and set Value
+		// Add PropertyChangeListener startPositionInput controle.
 		startPositionInput.addPropertyChangeListener(e -> {
-			if (e.getNewValue().equals("")) {
-				originInformation.setNode(null);
-				setStartNode(null); // reset/clear startNode
+			if (isNewStringEmpty(e)) {
+				originInformation.clearNode();
+				setStartNode(null); // reset/clear pStartNode
 			} else {
-				System.out.println("Start: " + e.getNewValue());
 				Node n = getNodeByName((String) e.getNewValue(), nodes);
 				if (n != null) {
 					setStartNode(n);
-
 				}
 			}
 		});
 	}
 
+	/**
+	 * Call when ever the origin or destination node changes.
+	 */
+	void nodeChanged()
+	{
+		if(startNode!=null && destinationNode !=null)
+		{
+			System.out.println("Calculate path from \"" + startNode.getName() + "\" to \"" + destinationNode.getName() + "\".");
+			//Start dijkstra
+			IDijkstra dijkstra = new Dijkstra();
+			ArrayList<Node> path = dijkstra.FindPath(startNode, destinationNode);
+			pathListing.setPath(path);
+			System.out.print("Path: ");
+			for (int i = 0; i < path.size(); i++) {
+				System.out.print(path.get(i).getName());
+			}
+			System.out.print("\n");
+			map.setPath(path);
+		}
+	}
+
+	/**
+	 * Check if an property changed event, listening to a string attribute brings a new empty string.
+	 * @param e PropertyChangedEvent, needs to listen to a string attribute!
+	 * @return Boolean if the new string is empty.
+	 */
+	boolean isNewStringEmpty(PropertyChangeEvent e)
+	{
+		return e.getNewValue().equals("");
+	}
+
+	/**
+	 * Finds a node in a list of node based on the node name.
+	 * @param name Name of the node to find.
+	 * @param nodes ArrayList<Node> where the node should be found in.
+	 * @return The first node in the list with the given name.
+	 */
 	private Node getNodeByName(String name, ArrayList<Node> nodes) {
 		for (Node n : nodes) {
 			if (n.getName().equals(name))
 				return n;
 		}
+		//Return null if the list does not contain the node.
 		return null;
 	}
 
+	//Add a node to the center of the view
 	public void addToCenter(javafx.scene.Node node) {
 		primaryStackPane.getChildren().add(node);
-	}
-
-	public void removeFromCenter(javafx.scene.Node node) {
-		primaryStackPane.getChildren().remove(node);
 	}
 
 	/**
@@ -199,38 +237,38 @@ public class RootLayoutController implements PropertyChangeListener {
 		return nodes;
 	}
 
+
+	/**
+	 * Set attribute nodes.
+	 * @param nodes ArrayList<Node> to set nodes to.
+	 */
 	public void setNodes(ArrayList<Node> nodes) {
 		this.nodes = nodes;
 	}
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
 
-	}
-
-	public void setStartNode(Node startNode) {
-		this.startNode = startNode;
-		originInformation.setNode(startNode);
+	/**
+	 * Set the start node of the path.
+	 * @param pStartNode Start node.
+	 */
+	public void setStartNode(Node pStartNode) {
+		this.startNode = pStartNode;
+		originInformation.setNode(pStartNode);
+		System.out.println("Start node set: " + pStartNode.getName());
 		nodeChanged();
 	}
 
-	public void setEndNode(Node endNode) {
-		this.endNode = endNode;
-		destinationInformation.setNode(endNode);
+	/**
+	 * Set the destinati node of the path.
+	 * @param pEndNode Destination node
+	 */
+	public void setDestinationNode(Node pEndNode) {
+		this.destinationNode = pEndNode;
+		destinationInformation.setNode(pEndNode);
+		System.out.println("Destination node set: " + pEndNode.getName());
 		nodeChanged();
 	}
 
-	void nodeChanged()
-	{
-		if(startNode!=null && endNode !=null)
-		{
-			//Start dijkstra
-			IDijkstra dijkstra = new Dijkstra();
-			ArrayList<Node> path = dijkstra.FindPath(startNode, endNode);
-			pathListing.setPath(path);
-			for (int i = 0; i < path.size(); i++) {
-				System.out.println(path.get(i).getName());
-			}
-		}
-	}
+
+
 }

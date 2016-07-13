@@ -14,7 +14,7 @@ public class Edge implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6548099498965575157L;
+	//private static final long serialVersionUID = 6548099498965575157L;
 	private float distance;
 	private String label;
 	private Node startNode;
@@ -34,7 +34,12 @@ public class Edge implements Serializable {
 	 * @param endNode
 	 */
 	public void addPart(Node endNode) {
-		distance = distance + distFrom(this.endNode, endNode);
+		float tmpDist = distFrom(this.endNode, endNode);
+		if(tmpDist>100){
+			System.out.println(tmpDist + getStartNode().getName() + " n1: " + getEndNode().getPrimaryId() + " n2: " + endNode.getPrimaryId());
+
+		}
+		distance = distance + tmpDist;
 		setEndNode(endNode);
 		allNodes.add(endNode);
 	}
@@ -53,7 +58,7 @@ public class Edge implements Serializable {
 	 * @return
 	 */
 	float distFrom(Node node1, Node node2) {
-		return distance = distance + distFrom(node1.getLat().floatValue(), node1.getLon().floatValue(),
+		return distFrom(node1.getLat().floatValue(), node1.getLon().floatValue(),
 				node2.getLat().floatValue(), node2.getLon().floatValue());
 	}
 
@@ -78,7 +83,7 @@ public class Edge implements Serializable {
 				* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		float dist = (float) (earthRadius * c);
-		return dist / 1000000;
+		return dist / 1000;
 	}
 
 	// Setter and Getter

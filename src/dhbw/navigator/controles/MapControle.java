@@ -1,5 +1,6 @@
 package dhbw.navigator.controles;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -10,18 +11,27 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
-public class MapControle extends Canvas {
+public class MapControle extends StackPane {
 
 	ArrayList<Node> nodeList;
+	ArrayList<Node> pathList;
 	double xSize = 0;
 	double ySize = 0;
 	StackPane parent = null;
+	int diameter = 5;
+	Canvas layer1 = new Canvas();
+	Canvas layer2 = new Canvas();
 
 	public MapControle()
 	{
+		getChildren().add(layer1);
+		getChildren().add(layer2);
 		this.parentProperty().addListener(new ChangeListener<Parent>() {
 			@Override
 			public void changed(ObservableValue<? extends Parent> ov, Parent oldP, Parent newP) {
@@ -33,8 +43,8 @@ public class MapControle extends Canvas {
 					MapControle.this.parent.heightProperty().addListener(new ChangeListener<Number>() {
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
-											Number newValue) {
-							MapControle.this.updateGraph();
+											Number newValue){
+							updateGraph();
 
 						}
 					});
@@ -43,7 +53,7 @@ public class MapControle extends Canvas {
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
 											Number newValue) {
 
-							MapControle.this.updateGraph();
+							updateGraph();
 						}
 					});
 				}
@@ -51,9 +61,14 @@ public class MapControle extends Canvas {
 		});
 	}
 
+	public void setPath(ArrayList<Node> pPathList){
+		pathList = pPathList;
+		updateGraph();
+	}
+
 	public void setOriginMap(ArrayList<Node> pNodeList) {
-		GraphicsContext graphic = this.getGraphicsContext2D();
 		nodeList = pNodeList;
+		updateGraph();
 	}
 
 	void updateGraph() {
@@ -66,25 +81,20 @@ public class MapControle extends Canvas {
 				this.xSize = this.ySize;
 			}
 
-			GraphicsContext graphic = this.getGraphicsContext2D();
-
-			graphic.clearRect(0, 0, this.xSize, this.ySize);
-
-			graphic.getCanvas().setHeight(this.ySize);
-			graphic.getCanvas().setWidth(this.xSize);
-
-			graphic.strokeLine(0, 0, this.xSize / 2, this.ySize / 2);
-			graphic.strokeLine(this.xSize, 0, this.xSize / 2, this.ySize / 2);
-			graphic.strokeLine(this.xSize, this.ySize, this.xSize / 2, this.ySize / 2);
-			graphic.strokeLine(0, this.ySize, this.xSize / 2, this.ySize / 2);
-
 			Node firstNode = this.nodeList.get(0);
 			// upper left
-			BigDecimal lat1 = firstNode.getLat();
-			BigDecimal lon1 = firstNode.getLon();
+			BigDecimal lon2;
+			BigDecimal lat2;
+			BigDecimal lat1;
+			BigDecimal lon1;
+
+			lat1 = firstNode.getLat();
+			lon1 = firstNode.getLon();
 			// lower right
-			BigDecimal lon2 = firstNode.getLon();
-			BigDecimal lat2 = firstNode.getLat();
+
+			lon2 = firstNode.getLon();
+
+			lat2 = firstNode.getLat();
 
 			BigDecimal compareLat;
 			BigDecimal compareLon;
@@ -112,26 +122,67 @@ public class MapControle extends Canvas {
 				multi = xMulti;
 			}
 
-			int diameter = 10;
+			drawLines(nodeList,
+					layer1,
+					lon1,
+					lon2,
+					lat1,
+					lat2,
+					xMulti,
+					yMulti,
+					false);
 
-			for (Node n : this.nodeList) {
-				if (n.getIsJunction() && false) {
-					double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
-					double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-					graphic.fillOval(nLon - diameter / 2, nLat - diameter / 2, diameter, diameter);
-				}
+			if(pathList != null && pathList.size()>0)
+			{
+				drawLines(pathList,
+						layer2,
+						lon1,
+						lon2,
+						lat1,
+						lat2,
+						xMulti,
+						yMulti,
+						true);
+			}
+		}
+	}
 
-				for (Edge e : n.getEdges()) {
-					ArrayList<Node> allNodes = e.allNodes();
-					for (int i = 0; i < allNodes.size() - 1; i++) {
-						Node en = allNodes.get(i);
-						Node enNext = allNodes.get(i + 1);
-						double lo1 = lon1.subtract(en.getLon()).doubleValue() * xMulti + this.xSize;
-						double la1 = en.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-						double lo2 = lon1.subtract(enNext.getLon()).doubleValue() * xMulti + this.xSize;
-						double la2 = enNext.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-						graphic.strokeLine(lo2, la2, lo1, la1);
-					}
+	void drawLines(ArrayList<Node> nodes,
+				   Canvas layer,
+				   BigDecimal lon1,
+				   BigDecimal lon2,
+				   BigDecimal lat1,
+				   BigDecimal lat2,
+				   double xMulti,
+				   double yMulti,
+				   Boolean highlightPath)
+	{
+		GraphicsContext graphic = layer.getGraphicsContext2D();
+		graphic.getCanvas().setHeight(this.ySize);
+		graphic.getCanvas().setWidth(this.xSize);
+		graphic.clearRect(0, 0, this.xSize, this.ySize);
+		if(highlightPath){
+			graphic.setStroke(Color.AQUA);
+			graphic.setLineWidth(3);
+		}
+
+		for (Node n : nodes) {
+			if (n.getIsJunction()&&highlightPath) {
+				double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
+				double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+				graphic.fillOval(nLon - diameter / 2, nLat - diameter / 2, diameter, diameter);
+			}
+
+			for (Edge e : n.getEdges()) {
+				ArrayList<Node> allNodes = e.allNodes();
+				for (int i = 0; i < allNodes.size() - 1; i++) {
+					Node en = allNodes.get(i);
+					Node enNext = allNodes.get(i + 1);
+					double lo1 = lon1.subtract(en.getLon()).doubleValue() * xMulti + this.xSize;
+					double la1 = en.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+					double lo2 = lon1.subtract(enNext.getLon()).doubleValue() * xMulti + this.xSize;
+					double la2 = enNext.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+					graphic.strokeLine(lo2, la2, lo1, la1);
 				}
 			}
 		}

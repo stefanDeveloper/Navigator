@@ -13,16 +13,11 @@ import dhbw.navigator.models.Node;
  */
 public interface IParser {
 
-	/**
-	 * 
-	 * @param pFile
-	 * @return Object
-	 */
 	public Object parseFile(File pFile);
 
 	public ArrayList<Node> getNodes(Osm pOsm);
 
-	public ArrayList<Node> deserialize();
+	public ArrayList<Node> deserialize(String path);
 
-	public void serialize(ArrayList<Node> nodes);
+	public void serialize(ArrayList<Node> nodes, String path);
 }

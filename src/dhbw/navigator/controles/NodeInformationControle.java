@@ -76,71 +76,77 @@ public class NodeInformationControle extends VBox {
     public void setNode(Node node)
     {
         Boolean keyAvailable = !new secrets().WeatherAPI.equals("");
-        if(node != null)
-        {
-            nodeName.setText(node.getName());
-            setActive(true);
-            int weatherCode = 960;
-            double temperature = 90;
-            if(false && keyAvailable){
-                CurrentWeather weather = owm.currentWeatherByCoordinates(node.getLat().floatValue(), node.getLon().floatValue());
+        nodeName.setText(node.getName());
+        setActive(true);
+        int weatherCode = 960;
+        double temperature = 90;
+        Boolean weatherLoaded = false;
+        if(keyAvailable){
+            CurrentWeather weather = owm.currentWeatherByCoordinates(node.getLat().floatValue(), node.getLon().floatValue());
+            if(weather.getResponseCode()==200)
+            {
                 weatherCode = weather.getWeatherInstance(0).getWeatherCode();
                 temperature = weather.getMainInstance().getTemperature();
+                weatherLoaded = true;
+            }
+            else{
+                System.out.println("Request failed, respond code: " + weather.getResponseCode());
+            }
+        }
+
+        if(weatherLoaded)
+        {
+            String weatherName = "";
+            String fileName = "none";
+            if(weatherCode < 300){
+                weatherName = "Gewitter";
+                fileName = "bolt";
+            }else if(weatherCode < 500){
+                weatherName = "Nieselregen";
+                fileName = "";
+            }else if(weatherCode < 600){
+                weatherName = "Regen";
+                fileName = "raining";
+            }else if(weatherCode < 700){
+                weatherName = "Schnee";
+                fileName = "snowflake";
+            }else if(weatherCode == 741){
+                weatherName = "Nebel";
+                fileName = "";
+            }else if(weatherCode == 800){
+                weatherName = "Klar";
+                fileName = "sunny";
+            }else if(weatherCode < 900){
+                weatherName = "Bewölkt";
+                fileName = "clouds";
+            }else if(weatherCode == 905){
+                weatherName = "Windig";
+                fileName = "umbrella";
+            }else if(weatherCode == 960 || weatherCode == 958){
+                weatherName = "Sturm";
+                fileName = "storm";
             }
 
-                String weatherName = "";
-                String fileName = "none";
-                if(weatherCode < 300){
-                    weatherName = "Gewitter";
-                    fileName = "bolt";
-                }else if(weatherCode < 500){
-                    weatherName = "Nieselregen";
-                    fileName = "";
-                }else if(weatherCode < 600){
-                    weatherName = "Regen";
-                    fileName = "raining";
-                }else if(weatherCode < 700){
-                    weatherName = "Schnee";
-                    fileName = "snowflake";
-                }else if(weatherCode == 741){
-                    weatherName = "Nebel";
-                    fileName = "";
-                }else if(weatherCode == 800){
-                    weatherName = "Klar";
-                    fileName = "sunny";
-                }else if(weatherCode < 900){
-                    weatherName = "Bewölkt";
-                    fileName = "clouds";
-                }else if(weatherCode == 905){
-                    weatherName = "Windig";
-                    fileName = "umbrella";
-                }else if(weatherCode == 960 || weatherCode == 958){
-                    weatherName = "Sturm";
-                    fileName = "storm";
+            if(fileName!="none")
+            {
+                try{
+                    Image image = new Image("file:images/png/"+ fileName +".png");
+                    weatherIcon.setImage(image);
+                }catch(Exception ex){
+                    System.out.println(ex);
                 }
+            }
+            String tmpWeather = "Wetter: " + weatherName;
 
-                if(fileName!="none")
-                {
-                    try{
-                        Image image = new Image("file:images/png/"+ fileName +".png");
-                        weatherIcon.setImage(image);
-                    }catch(Exception ex){
-                        System.out.println(ex);
-                    }
-                }
-                String tmpWeather = "Wetter: " + weatherName;
-
-                temperature = ((temperature - 32)*5)/9;
-                DecimalFormat f = new DecimalFormat("##.0");
-                String tmpTemperature = "Temperatur: " + f.format(temperature) + "°C";
-                weatherLabel.setText(tmpWeather);
-                tempLabel.setText(tmpTemperature);
+            temperature = ((temperature - 32)*5)/9;
+            DecimalFormat f = new DecimalFormat("##.0");
+            String tmpTemperature = "Temperatur: " + f.format(temperature) + "°C";
+            weatherLabel.setText(tmpWeather);
+            tempLabel.setText(tmpTemperature);
+        }else{
 
         }
-        else
-        {
-            setActive(false);
-        }
+
     }
 
     public void clearNode()
