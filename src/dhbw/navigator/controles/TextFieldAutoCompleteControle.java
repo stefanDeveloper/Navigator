@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
+ * TextFieldAutoCompleteControl
  * AutoComplete TextField, give suggestions from a SortedSet<String>.
  * 
  * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath

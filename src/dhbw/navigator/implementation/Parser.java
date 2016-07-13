@@ -21,16 +21,14 @@ import dhbw.navigator.models.Node;
 
 /**
  * Parser
+ * Can parse, Serialize and deserialize nodes
  * 
  * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
  *
  */
 public class Parser implements IParser {
-
-
-
 	/**
-	 * Parse file into Object
+	 * Parse XML-File into OSM-Object
 	 */
 	@Override
 	public Object parseFile(File pFile) {
@@ -67,8 +65,8 @@ public class Parser implements IParser {
 		return result;
 	}
 
-	private void testTest(Node start, ArrayList<Node> test) { // TODO
-																// Refactoring
+	//TODO Remove debug function
+	private void testTest(Node start, ArrayList<Node> test) {
 		if (!test.contains(start)) {
 			test.add(start);
 			for (Node n : start.getNeighbours()) {

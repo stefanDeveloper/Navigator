@@ -1,28 +1,23 @@
 package dhbw.navigator.controles;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import javafx.animation.Animation;
 import javafx.animation.Transition;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-
 /**
- * SlideBar extends VBox
+ * SlideBarControle
+ * A fancy window that can slide
  *
- * @author Stefan Machmeier, Manuela Leopold, Konrad MÃ¼ller, Markus Menrath
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
  *
  */
 public class SlideBarControle extends VBox {
