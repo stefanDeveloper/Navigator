@@ -1,5 +1,7 @@
 package dhbw.navigator.controles;
 
+import java.text.DecimalFormat;
+
 import dhbw.navigator.models.Node;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -7,14 +9,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.aksingh.owmjapis.CurrentWeather;
 import net.aksingh.owmjapis.OpenWeatherMap;
 
-import java.text.DecimalFormat;
-
 /**
- * Created by Konrad Mueller on 01.07.2016.
+ * NodeInformationControle
+ * Shows some informations about the node
+ * 
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ *
  */
 public class NodeInformationControle extends VBox {
 
@@ -28,7 +36,8 @@ public class NodeInformationControle extends VBox {
 
     private double height;
 
-    public NodeInformationControle(double pHeight)
+    @SuppressWarnings({ "static-access" })
+	public NodeInformationControle(double pHeight)
     {
         this.height = pHeight;
         setPadding(new Insets(5,0,0,0));
@@ -75,7 +84,8 @@ public class NodeInformationControle extends VBox {
 
     public void setNode(Node node)
     {
-        Boolean keyAvailable = !new secrets().WeatherAPI.equals("");
+        @SuppressWarnings("static-access")
+		Boolean keyAvailable = !new secrets().WeatherAPI.equals("");
         nodeName.setText(node.getName());
         setActive(true);
         int weatherCode = 960;
@@ -90,6 +100,7 @@ public class NodeInformationControle extends VBox {
                 weatherLoaded = true;
             }
             else{
+            	//TODO Add alert
                 System.out.println("Request failed, respond code: " + weather.getResponseCode());
             }
         }
@@ -143,10 +154,7 @@ public class NodeInformationControle extends VBox {
             String tmpTemperature = "Temperatur: " + f.format(temperature) + "Â°C";
             weatherLabel.setText(tmpWeather);
             tempLabel.setText(tmpTemperature);
-        }else{
-
         }
-
     }
 
     public void clearNode()

@@ -14,7 +14,7 @@ public class Edge implements Serializable {
 	/**
 	 * 
 	 */
-	//private static final long serialVersionUID = 6548099498965575157L;
+	private static final long serialVersionUID = 6548099498965575157L;
 	private float distance;
 	private String label;
 	private Node startNode;
