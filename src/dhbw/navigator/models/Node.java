@@ -3,7 +3,6 @@ package dhbw.navigator.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.SortedSet;
 
 import dhbw.navigator.generated.Osm;
 
