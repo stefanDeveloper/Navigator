@@ -56,7 +56,7 @@ public class Parser implements IParser {
 		ArrayList<Node> result = extractNodes(pOsm);
 		result = mergeNodes(result);
 		result = extractWays(pOsm, result);
-		//result = mergeEdges(result);
+//		result = mergeEdges(result);
 		for(Node n: result)
 		{
 			n.setAllIds(null);
