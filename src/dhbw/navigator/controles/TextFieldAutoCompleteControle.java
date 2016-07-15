@@ -51,7 +51,7 @@ public class TextFieldAutoCompleteControle extends TextField {
 				LinkedList<String> searchResult = new LinkedList<>();
 				searchResult.addAll(findJunctions());
 
-				if (context.size() > 0 && !(searchResult.size()==1&&searchResult.get(0) == getText())) {
+				if (context.size() > 0 && !(searchResult.size()==1&&searchResult.get(0).toUpperCase().equals(getText().toUpperCase()))) {
 					// Set ContextMenu
 					populatePopup(searchResult);
 					if (!contextMenu.isShowing()) {
