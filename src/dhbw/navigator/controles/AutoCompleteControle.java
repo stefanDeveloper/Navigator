@@ -9,7 +9,7 @@ import java.util.SortedSet;
  * Control that combines a TextFieldAutoCompleteControle with a
  * Name Label and ClearButton.
  * 
- * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Mï¿½ller, Markus Menrath
  *
  */
 
@@ -75,10 +75,10 @@ public class AutoCompleteControle extends GridPane {
 	}
 
 	public String getText() {
-		return text;
+		return textField.getText();
 	}
 
 	public void setText(String text) {
-		this.text = text;
+		textField.setText(text);
 	}
 }

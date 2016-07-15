@@ -13,11 +13,5 @@ import dhbw.navigator.models.Node;
  */
 public interface IParser {
 
-	public Object parseFile(File pFile);
-
-	public ArrayList<Node> getNodes(Osm pOsm);
-
-	public ArrayList<Node> deserialize(String path);
-
-	public void serialize(ArrayList<Node> nodes, String path);
+	public ArrayList<Node> getNodes(String xmlFilePath);
 }

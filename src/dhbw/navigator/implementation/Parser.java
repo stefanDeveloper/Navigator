@@ -30,8 +30,7 @@ public class Parser implements IParser {
 	/**
 	 * Parse XML-File into OSM-Object
 	 */
-	@Override
-	public Object parseFile(File pFile) {
+	private Osm parseFile(File pFile) {
 		Osm customer = new Osm();
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Osm.class);
@@ -51,15 +50,26 @@ public class Parser implements IParser {
 	}
 
 	@Override
-	public ArrayList<Node> getNodes(Osm pOsm) {
+	public ArrayList<Node> getNodes(String xmlFilePath) {
+		File file = new File(xmlFilePath);
+		Osm pOsm = parseFile(file);
+
 		Timer timer = new Timer("Get nodes");
 		ArrayList<Node> result = extractNodes(pOsm);
 		result = mergeNodes(result);
 		result = extractWays(pOsm, result);
-//		result = mergeEdges(result);
+		result = mergeEdges(result);
 		for(Node n: result)
 		{
 			n.setAllIds(null);
+		}
+		ArrayList<Node> cleared = new ArrayList<>();
+		for(Node n: result)
+		{
+			if(n.getEdges().size()>1){
+				n.setAllIds(null);
+				cleared.add(n);
+			}
 		}
 		timer.printDuration();
 		return result;
@@ -75,56 +85,6 @@ public class Parser implements IParser {
 			}
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayList<Node> deserialize(String path) {
-		Timer timer = new Timer("Deserilisation");
-
-		ArrayList<Node> nodes;
-
-		try {
-
-			FileInputStream fin = new FileInputStream(path);
-			ObjectInputStream ois = new ObjectInputStream(fin);
-			Object object = ois.readObject();
-			nodes = (ArrayList<Node>)object;
-			ois.close();
-			timer.printDuration();
-
-			ArrayList<Node> test = new ArrayList<>();
-			testTest(nodes.get(200), test);
-
-			return nodes;
-
-		} catch (Exception ex) {
-			//ex.printStackTrace();
-			return null;
-		}
-
-	}
-
-	@Override
-	public void serialize(ArrayList<Node> nodes, String path) {
-		Timer timer = new Timer("Serilisation");
-
-		try {
-			//Delete old files
-			File file = new File(path);
-			boolean result = Files.deleteIfExists(file.toPath());
-			System.out.println("Old file deleted: " + result);
-
-			FileOutputStream fout = new FileOutputStream(path);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(nodes);
-			oos.close();
-			System.out.println("Serialized map");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		timer.printDuration();
-	}
-
 
 	/**
 	 * Merges duplicated nodes.
@@ -162,15 +122,9 @@ public class Parser implements IParser {
 	ArrayList<Node> mergeEdges(ArrayList<Node> nodes){
 		for(Node n: nodes){
 			int edgeCount = n.getEdges().size();
-			for (int i = 0; i < edgeCount; i++) {
-				for (int j = 0; j < edgeCount; j++) {
-					if(j!=i && n.getEdges().get(i).getStartNode() == n.getEdges().get(j).getEndNode())
-					{
-						n.getEdges().remove(j);
-						edgeCount--;
-						break;
-					}
-				}
+			for (Edge e: n.getEdges()){
+
+
 			}
 		}
 		return nodes;
@@ -178,7 +132,7 @@ public class Parser implements IParser {
 
 	/**
 	 * Finds the edges for all nodes from an osm source object.
-	 * 
+	 *
 	 * @param pOsm
 	 *            Osm source object.
 	 * @param existingNodes
@@ -213,7 +167,6 @@ public class Parser implements IParser {
 						// edge list
 						n.addEdge(edge);
 						edges.add(edge);
-
 						// Remove from list
 						way.remove(i);
 						length--;
@@ -230,7 +183,6 @@ public class Parser implements IParser {
 		boolean somethingRemoved = true;
 
 		while (somethingRemoved) {
-			// while ((way = pOsm.getWay()).size()>0 && somethingRemoved) {
 			somethingRemoved = false;
 			edgeCounter = 0;
 			for (int i = 0; i < length; i++) {
@@ -247,7 +199,7 @@ public class Parser implements IParser {
 
 				for (Edge e : edges) {
 					//Check if the way has to append to an existing node
-					if (e.getEndNode().getPrimaryId() == startNodeId) {
+					if (e.getEndNode().getPrimaryId()==startNodeId) {
 						endNodeId = nds.get(nds.size() - 1).getRef();
 						Osm.Node endNode = pOsm.getNodeById(endNodeId);
 						e.addPart(new Node(endNode));
@@ -275,6 +227,11 @@ public class Parser implements IParser {
 				}
 			}
 		}
+		for (int i = 0; i < edges.size(); i++) {
+			if(edges.get(i).getEndNode()==null){
+				edges.get(i).getStartNode().getEdges().remove(edges.get(i));
+			}
+		}
 		System.out.println("Extracting edges finished.");
 		return existingNodes;
 	}
@@ -283,7 +240,7 @@ public class Parser implements IParser {
 	 * Extracts all valid junctions (junctions that have a reference number)
 	 * from an Osm source. The junctions get saved in a list of nodes,
 	 * containing only the name, coordinates and reference number.
-	 * 
+	 *
 	 * @param pOsm
 	 *            An osm source object.
 	 * @return A list of nodes.
@@ -292,9 +249,8 @@ public class Parser implements IParser {
 		ArrayList<Node> result = new ArrayList<Node>();
 		for (Osm.Node n : pOsm.getNode()) {
 			Object tag = n.getTag("highway");
-			// A node has to be a junction and needs a ref to be a valid
-			// junction!
-			if (tag != null && n.doesTagExist("name") && tag.equals("motorway_junction") && n.doesTagExist("ref")) {
+			// A node has to be a junction and needs a ref to be a valid junction!
+			if (tag != null && n.doesTagExist("name") && tag.equals("motorway_junction")) {
 				result.add(new Node(n));
 			}
 		}

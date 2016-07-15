@@ -12,8 +12,10 @@ import dhbw.navigator.controles.SlideBarControle;
 import dhbw.navigator.generated.Osm;
 import dhbw.navigator.implementation.Dijkstra;
 import dhbw.navigator.implementation.Parser;
+import dhbw.navigator.implementation.Serialiser;
 import dhbw.navigator.interfaces.IDijkstra;
 import dhbw.navigator.interfaces.IParser;
+import dhbw.navigator.interfaces.ISerialiser;
 import dhbw.navigator.models.Node;
 import dhbw.navigator.start.StartNavigator;
 import javafx.application.Platform;
@@ -25,7 +27,7 @@ import javafx.scene.layout.*;
 
 /**
  * Controller for RootLayoutWindow.fxml
- * 
+ *
  * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
  *
  */
@@ -39,8 +41,10 @@ public class RootLayoutController {
 	private NodeInformationControle destinationInformation = new NodeInformationControle(90);
 	private PathListingControle pathListing = new PathListingControle();
 	private MapControle map = new MapControle();
+	Button switchButton = new Button("</>");
 
-	static private String path = System.getProperty("user.home") + "\\desktop\\map.ser";
+	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
+	static private String xmlFilePath = "Testdata/export.xml";
 
 	private StartNavigator start;
 
@@ -64,22 +68,17 @@ public class RootLayoutController {
 	 */
 	private void loadData(Boolean parseData) {
 		IParser parser = new Parser();
+		ISerialiser serialiser = new Serialiser();
 		// Set default location
+
 
 		// Check boolean
 		if (parseData) {
 			// Parse file and serialize it
-			Osm data = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
-			nodes = parser.getNodes(data);
-			parser.serialize(nodes, path);
+			nodes = parser.getNodes(xmlFilePath);
+			serialiser.serialize(nodes, serialiseFilePath);
 		} else {
-			nodes = parser.deserialize(path);
-			if(nodes==null){
-				System.out.println("Deserialization failed.");
-				Osm data = (Osm) parser.parseFile(new File("Testdata/germany.xml"));
-				nodes = parser.getNodes(data);
-				parser.serialize(nodes, path);
-			}
+			nodes = serialiser.deserialize(serialiseFilePath);
 		}
 		SortedSet<String> namesOfJunctions = new TreeSet<>();
 		for (Node n : nodes) {
@@ -87,10 +86,8 @@ public class RootLayoutController {
 				// Add names of Junction for Context Menu
 				namesOfJunctions.add(n.getName());
 		}
-
 		startPositionInput.setNamesOfJunctions(namesOfJunctions);
 		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
-
 		//Set map content
 		map.setOriginMap(nodes);
 	}
@@ -105,30 +102,25 @@ public class RootLayoutController {
 			public void run() {
 				//Muss in anderne Thread ausgelagert werden
 				Button btn = new Button("<");
-				//btn.setMinHeight(80);
-				//btn.setMaxHeight(80);
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
-
 				primaryStackPane.setAlignment(btn, Pos.CENTER_LEFT);
-
-
 				addToCenter(map);
 				addToCenter(btn);
 
 				Label headerLabel = new Label("Routenwahl");
 				headerLabel.setStyle("h1");
-
 				flapBar = new SlideBarControle(325, btn,
 						new Label("Routeneingabe"),
 						startPositionInput,
+						switchButton,
 						destinationPositionInput,
 						originInformation,
 						destinationInformation,
 						pathListing);
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
-				loadData(false);
+				loadData(true);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if((boolean)isExpanded.getNewValue()){
 						 btn.setText("<");
@@ -137,8 +129,15 @@ public class RootLayoutController {
 					}
 				});
 			}
-
 		});
+
+		switchButton.setOnAction(event -> {
+			String tmpText = destinationPositionInput.getText();
+			destinationPositionInput.setText(startPositionInput.getText());
+			startPositionInput.setText(tmpText);
+		});
+
+
 		// Add PropertyChangeListener to destinationPositionInput controle.
 		destinationPositionInput.addPropertyChangeListener(e -> {
 			if (isNewStringEmpty(e)) { // end node selected
@@ -179,7 +178,7 @@ public class RootLayoutController {
 			pathListing.setPath(path);
 			System.out.print("Path: ");
 			for (int i = 0; i < path.size(); i++) {
-				System.out.print(path.get(i).getName());
+				System.out.println(path.get(i).getName());
 			}
 			System.out.print("\n");
 			map.setPath(path);
@@ -248,25 +247,36 @@ public class RootLayoutController {
 
 
 	/**
-	 * Set the start node of the path.
+	 * Set the start node of the serialiseFilePath.
 	 * @param pStartNode Start node.
 	 */
 	public void setStartNode(Node pStartNode) {
 		this.startNode = pStartNode;
-		originInformation.setNode(pStartNode);
-		System.out.println("Start node set: " + pStartNode.getName());
-		nodeChanged();
+		if(pStartNode==null){
+			originInformation.clearNode();
+		}else{
+			originInformation.setNode(pStartNode);
+			map.setStart(startNode);
+			System.out.println("Start node set: " + pStartNode.getName());
+			nodeChanged();
+		}
+
 	}
 
 	/**
-	 * Set the destinati node of the path.
+	 * Set the destinati node of the serialiseFilePath.
 	 * @param pEndNode Destination node
 	 */
 	public void setDestinationNode(Node pEndNode) {
 		this.destinationNode = pEndNode;
-		destinationInformation.setNode(pEndNode);
-		System.out.println("Destination node set: " + pEndNode.getName());
-		nodeChanged();
+		if(pEndNode == null){
+			destinationInformation.clearNode();
+		}else{
+			destinationInformation.setNode(pEndNode);
+			map.setDestinationNode(destinationNode);
+			System.out.println("Destination node set: " + pEndNode.getName());
+			nodeChanged();
+		}
 	}
 
 
