@@ -107,17 +107,20 @@ public class RootLayoutController {
 				primaryStackPane.setAlignment(btn, Pos.CENTER_LEFT);
 				addToCenter(map);
 				addToCenter(btn);
-
+				BorderPane layoutPane = new BorderPane();
+				layoutPane.setCenter(switchButton);
+				layoutPane.setAlignment(switchButton, Pos.CENTER);
 				Label headerLabel = new Label("Routenwahl");
 				headerLabel.setStyle("h1");
 				flapBar = new SlideBarControle(325, btn,
 						new Label("Routeneingabe"),
 						startPositionInput,
-						switchButton,
+						layoutPane,
 						destinationPositionInput,
 						originInformation,
 						destinationInformation,
 						pathListing);
+
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
 				loadData(true);
@@ -169,8 +172,13 @@ public class RootLayoutController {
 	 */
 	void nodeChanged()
 	{
-		if(startNode!=null && destinationNode !=null)
-		{
+
+		if(startNode==null && destinationNode ==null) {
+			//TODO
+		}else if(startNode == null) {
+		}else if(destinationNode == null) {
+		}else if(destinationNode == startNode) {
+		}else{
 			System.out.println("Calculate path from \"" + startNode.getName() + "\" to \"" + destinationNode.getName() + "\".");
 			//Start dijkstra
 			IDijkstra dijkstra = new Dijkstra();

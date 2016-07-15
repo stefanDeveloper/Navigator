@@ -10,6 +10,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -29,7 +31,7 @@ public class MapControle extends StackPane {
 	Node startNode;
 	Node destinationNode;
 
-	StackPane parent = null;
+	BorderPane parent = null;
 	double diameter = 10;
 	Canvas mapLayer = new Canvas();
 	Canvas pathLayer = new Canvas();
@@ -66,25 +68,23 @@ public class MapControle extends StackPane {
 			public void changed(ObservableValue<? extends Parent> ov, Parent oldP, Parent newP) {
 				if (newP != null) {
 					//Set new parent
-					MapControle.this.parent = (StackPane) MapControle.this.getParent();
+					MapControle.this.parent = (BorderPane)getParent().getParent();
 					
 					//Update the graph
-					MapControle.this.updateGraph();
+					updateGraph();
 					//Listen to the height and width of the parent
 					//and redraw the map
-					MapControle.this.parent.heightProperty().addListener(new ChangeListener<Number>() {
+					parent.heightProperty().addListener(new ChangeListener<Number>() {
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
 											Number newValue){
 							updateGraph();
-
 						}
 					});
-					MapControle.this.parent.widthProperty().addListener(new ChangeListener<Number>() {
+					parent.widthProperty().addListener(new ChangeListener<Number>() {
 						@Override
 						public void changed(ObservableValue<? extends Number> observable, Number oldValue,
 											Number newValue) {
-
 							updateGraph();
 						}
 					});
