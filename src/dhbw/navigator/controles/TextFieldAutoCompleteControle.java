@@ -51,7 +51,7 @@ public class TextFieldAutoCompleteControle extends TextField {
 				LinkedList<String> searchResult = new LinkedList<>();
 				searchResult.addAll(findJunctions());
 
-				if (context.size() > 0) {
+				if (context.size() > 0 && !(searchResult.size()==1&&searchResult.get(0) == getText())) {
 					// Set ContextMenu
 					populatePopup(searchResult);
 					if (!contextMenu.isShowing()) {
@@ -107,7 +107,7 @@ public class TextFieldAutoCompleteControle extends TextField {
 		// Fill all names, which contains input
 		if (searchResult.size() < 10) {
 			for (String string : context) {
-				if (string.toLowerCase().contains(input)) {
+				if (string.toLowerCase().contains(input) &! searchResult.contains(string)) {
 					searchResult.add(string);
 				}
 			}
