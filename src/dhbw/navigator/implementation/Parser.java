@@ -1,11 +1,6 @@
 package dhbw.navigator.implementation;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -101,7 +96,7 @@ public class Parser implements IParser {
 				if(en.isSameNode(givenNodes.get(0)))
 				{
 					//Node already exists, add the reference id to the id list of the existing node.
-					en.addId(givenNodes.get(0).getPrimaryId());
+					en.addDuplicatedNode(givenNodes.get(0));
 					givenNodes.remove(0);
 					exists = true;
 					break;

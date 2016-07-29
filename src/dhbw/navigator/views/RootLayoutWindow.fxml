@@ -13,6 +13,8 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleInfo" text="Info" />
                   <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleSync" text="Synchronisieren" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Close" />
             </items>
           </Menu>

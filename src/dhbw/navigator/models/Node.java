@@ -3,6 +3,7 @@ package dhbw.navigator.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import dhbw.navigator.generated.Osm;
 
@@ -26,18 +27,19 @@ public class Node implements Serializable {
 	private String ref;
 	private long id;
 	private boolean isJunction;
-	private ArrayList<Long> allIds = new ArrayList<>();
+	private ArrayList<Node> allIds = new ArrayList<>();
+	private int junctionCount;
 
 	//Attributes for dijkstra
 	private float shortestDistance;
 	private Node lastNode;
 
 	public Node(Osm.Node node) {
-		setName((String) node.getTag("name"));
+		if(node.doesTagExist("name"))setName((String) node.getTag("name"));
 		setLon(node.getLon());
 		setLat(node.getLat());
 		setPrimaryId(node.getId());
-		addId(node.getId());
+		addDuplicatedNode(this);
 		if (node.doesTagExist("ref")) {
 			setRef((String) node.getTag("ref"));
 			setIsJunction(true);
@@ -48,7 +50,7 @@ public class Node implements Serializable {
 		return lastNode;
 	}
 
-	public void setAllIds(ArrayList<Long> list){
+	public void setAllIds(ArrayList<Node> list){
 		allIds = list;
 	}
 
@@ -64,14 +66,15 @@ public class Node implements Serializable {
 		this.shortestDistance = shortestDistance;
 	}
 
-	public ArrayList<Long> getAllIds()
+	public ArrayList<Node> getAllIds()
 	{
 		return allIds;
 	}
 
-	public void addId(long id)
+	public void addDuplicatedNode(Node id)
 	{
 		allIds.add(id);
+		junctionCount++;
 	}
 
 	public Node(String name) {
@@ -133,12 +136,41 @@ public class Node implements Serializable {
 	 */
 	public boolean isSameNode(Node compareNode) {
 		float dist = distFrom(compareNode, this);
-		boolean sameName = compareNode.getName().equals(getName());
-		if(sameName && dist > 100){
-			System.out.println(dist + " name: " + this.getName());
+		boolean sameName = compareName(getName(), compareNode.getName());
+		boolean sameRef = getRef()!=null && compareNode.getRef() != null && getRef().equals(compareNode.getRef());
+		boolean isBigJunctionAswell;
+		isBigJunctionAswell = compareNode.getName().toLowerCase().contains("kreuz")
+				&&getName().toLowerCase().contains("kreuz");
+		if(!isBigJunctionAswell){
+			isBigJunctionAswell = compareNode.getName().toLowerCase().contains("dreieck")
+					&&getName().toLowerCase().contains("dreieck");
 		}
-		return sameName && dist < 10;
+		return (sameName || sameRef || isBigJunctionAswell) && dist < 3;
 	};
+
+	String getSimpleString(String s){
+
+		return s.replaceAll("[-+.^:, ]","").toLowerCase();
+	}
+
+	String stringInAlphabeticelOrder(String s){
+		char [] chars = s.toLowerCase().toCharArray();
+		Arrays.sort(chars);
+		s = "";
+		for(char c: chars){
+			s+=c;
+		}
+		return s;
+	}
+
+	Boolean compareName(String n1, String n2){
+		n1 = getSimpleString(n1);
+		n2 = getSimpleString(n2);
+		if(n1.equals(n2)) return true;
+		if(n1.contains(n2)||n2.contains(n1)) return true;
+		if(stringInAlphabeticelOrder(n1).equals(stringInAlphabeticelOrder(n2))) return true;
+		return false;
+	}
 
 	/**
 	 * Calculates the distance between two nodes.
@@ -195,14 +227,14 @@ public class Node implements Serializable {
 	}
 
 	public int getJunctionsCount() {
-		return allIds.size();
+		return junctionCount;
 	}
 
 	public boolean isPartOfWay(long startNodeId)
 	{
-		for(Long l: allIds)
+		for(Node n: allIds)
 		{
-			if(l==startNodeId) return true;
+			if(n.getPrimaryId()==startNodeId) return true;
 		}
 		return false;
 	}
