@@ -19,40 +19,40 @@ import javafx.scene.paint.Color;
  * MapControle
  * Control that can visualize a Node-Map with a Path
  * 
- * @author Stefan Machmeier, Manuela Leopold, Konrad M�ller, Markus Menrath
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
  *
  */
-
-
 public class MapControle extends StackPane {
 
-	ArrayList<Node> nodeList;
-	ArrayList<Node> pathList;
-	Node startNode;
-	Node destinationNode;
+	private ArrayList<Node> nodeList;
+	private ArrayList<Node> pathList;
+	private Node startNode;
+	private Node destinationNode;
 
-	BorderPane parent = null;
-	double diameter = 10;
-	Canvas mapLayer = new Canvas();
-	Canvas pathLayer = new Canvas();
-	Canvas startMarkLayer = new Canvas();
-	Canvas destinatinMarkLayer = new Canvas();
+	private BorderPane parent = null;
+	private double diameter = 10;
+	private Canvas mapLayer = new Canvas();
+	private Canvas pathLayer = new Canvas();
+	private Canvas startMarkLayer = new Canvas();
+	private Canvas destinatinMarkLayer = new Canvas();
 
 	// upper left
-	double zoom = 0;
-	double xSize = 0;
-	double ySize = 0;
-	BigDecimal lon2;
-	BigDecimal lat2;
-	BigDecimal lat1;
-	BigDecimal lon1;
-	double xMulti;
-	double yMulti;
+	private double zoom = 0;
+	private double xOffset = 0;
+	private double yOffset = 0;
+	private double xSize = 0;
+	private double ySize = 0;
+	private BigDecimal lon2;
+	private BigDecimal lat2;
+	private BigDecimal lat1;
+	private BigDecimal lon1;
+	private double xMulti;
+	private double yMulti;
 
 	public MapControle()
 	{
 		//Add mapLayer (map) and pathLayer (path)
-		getChildren().addAll(mapLayer, pathLayer, startMarkLayer, destinatinMarkLayer);
+		getChildren().addAll(mapLayer, startMarkLayer, destinatinMarkLayer, pathLayer);
 
 		//Set default values for the layer
 		pathLayer.getGraphicsContext2D().setStroke(Color.AQUA);
@@ -218,17 +218,18 @@ public class MapControle extends StackPane {
 		
 		//Draw all edges
 		for (Node n : nodes) {
+			double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+			double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
+			graphic.fillText(n.getName() + " "+n.getShortestDistance(), nLon + 15, nLat);
 
-			if(!highlightPath){
-				double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
-				double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-				graphic.fillText(n.getName(), nLon + 15, nLat);
+			if(!highlightPath && -xMulti > 350){
+				if(n.getJunctionsCount()>2||-xMulti > 450) //graphic.fillText(n.getName(), nLon + 15, nLat);
 				graphic.fillOval(nLon - diameter / 2,
 						nLat - diameter / 2,
 						diameter,
 						diameter);
-
 			}
+
 
 			//Draw each path of the edge
 			for (Edge e : n.getEdges()) {
@@ -256,16 +257,5 @@ public class MapControle extends StackPane {
 				}
 			}
 		}
-
-		/*
-		//Bigger nodes if highlight is enabled
-		double highlightDiameter = diameter*1.5;
-		for (Node n: nodes) {
-			//If it's an highlighted path draw a dot for each junction
-			double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
-			double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-			graphic.fillOval(nLon - highlightDiameter / 2, nLat - highlightDiameter / 2, highlightDiameter, highlightDiameter);
-		}
-		*/
 	}
 }

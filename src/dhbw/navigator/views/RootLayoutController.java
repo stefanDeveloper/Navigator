@@ -12,6 +12,7 @@ import dhbw.navigator.controles.SlideBarControle;
 import dhbw.navigator.generated.Osm;
 import dhbw.navigator.implementation.Dijkstra;
 import dhbw.navigator.implementation.Parser;
+import dhbw.navigator.implementation.Parser2;
 import dhbw.navigator.implementation.Serialiser;
 import dhbw.navigator.interfaces.IDijkstra;
 import dhbw.navigator.interfaces.IParser;
@@ -44,7 +45,7 @@ public class RootLayoutController {
 	Button switchButton = new Button("</>");
 
 	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
-	static private String xmlFilePath = "Testdata/export.xml";
+	static private String xmlFilePath = "Testdata/cologne.xml";
 
 	private StartNavigator start;
 
@@ -67,10 +68,9 @@ public class RootLayoutController {
 	 * @param parseData Boolean, set true to parse the data from the source again, false to deserialise already parsed data.
 	 */
 	private void loadData(Boolean parseData) {
-		IParser parser = new Parser();
+		IParser parser = new Parser2();
 		ISerialiser serialiser = new Serialiser();
 		// Set default location
-
 
 		// Check boolean
 		if (parseData) {
@@ -123,7 +123,7 @@ public class RootLayoutController {
 
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
-				loadData(true);
+				loadData(false);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if((boolean)isExpanded.getNewValue()){
 						 btn.setText("<");
@@ -239,6 +239,19 @@ public class RootLayoutController {
 		UtilityViews.Information("Navigator \n" + "Gruppenprojekt Programmieren\n" + "2. Semester\n"
 				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad M�ller");
 	}
+
+	/**
+	 * Info Alert
+	 */
+	@FXML
+	private void handleSync() {
+		setStartNode(null);
+		setDestinationNode(null);
+		loadData(true);
+	}
+
+
+
 
 	public ArrayList<Node> getNodes() {
 		return nodes;

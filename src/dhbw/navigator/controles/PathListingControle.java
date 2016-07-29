@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * PathListingControle
  * Control that shows each step of the path
  * 
- * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Mï¿½ller, Markus Menrath
  *
  */
 public class PathListingControle extends VBox{
@@ -62,7 +62,7 @@ public class PathListingControle extends VBox{
                 		textInfoBox = "Ende: " + textInfoBox;
             		}
             		else {
-            			textInfoBox = "Über: " + textInfoBox;
+            			textInfoBox = "Ãœber: " + textInfoBox;
             		}
             	}
             	else{

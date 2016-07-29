@@ -21,7 +21,7 @@ import net.aksingh.owmjapis.OpenWeatherMap;
  * NodeInformationControle
  * Shows some informations about the node
  * 
- * @author Stefan Machmeier, Manuela Leopold, Konrad Müller, Markus Menrath
+ * @author Stefan Machmeier, Manuela Leopold, Konrad Mï¿½ller, Markus Menrath
  *
  */
 public class NodeInformationControle extends VBox {
@@ -86,6 +86,7 @@ public class NodeInformationControle extends VBox {
     {
         @SuppressWarnings("static-access")
 		Boolean keyAvailable = !new secrets().WeatherAPI.equals("");
+        keyAvailable = false;
         nodeName.setText(node.getName());
         setActive(true);
         int weatherCode = 960;
@@ -168,13 +169,14 @@ public class NodeInformationControle extends VBox {
         {
             setPrefHeight(height);
             grid.setPrefHeight(height - 5);
+            setMinHeight(height);
 
             setVisible(true);
 
         }else{
             setPrefHeight(0);
             setHeight(0);
-
+            setMinHeight(0);
             grid.setPrefHeight(0);
             setVisible(false);
         }

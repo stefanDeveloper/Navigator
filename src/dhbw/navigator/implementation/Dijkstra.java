@@ -71,7 +71,7 @@ public class Dijkstra implements IDijkstra {
 
 		for (Edge e : start.getEdges()) {
 			Node n = e.getNeighbour(start);
-			if (!this.visited.contains(n)) {
+			if (!visited.contains(n)) {
 				float dist = start.getShortestDistance() + e.getDistance();
 				if (dist < n.getShortestDistance() || n.getShortestDistance() == -1) {
 
