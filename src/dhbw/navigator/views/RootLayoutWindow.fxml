@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.MenuItem?>
 
 <BorderPane prefHeight="720.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dhbw.navigator.views.RootLayoutController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
+            <Menu mnemonicParsing="false" fx:id="menu" >
+               <graphic>
+                  <ImageView fx:id="menuImage" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleInfo" text="Info" />

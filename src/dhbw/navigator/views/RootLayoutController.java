@@ -2,16 +2,16 @@ package dhbw.navigator.views;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import dhbw.navigator.controles.AutoCompleteControle;
 import dhbw.navigator.controles.MapControle;
 import dhbw.navigator.controles.NodeInformationControle;
 import dhbw.navigator.controles.PathListingControle;
 import dhbw.navigator.controles.SlideBarControle;
-import dhbw.navigator.generated.Osm;
 import dhbw.navigator.implementation.Dijkstra;
-import dhbw.navigator.implementation.Parser;
 import dhbw.navigator.implementation.Parser2;
 import dhbw.navigator.implementation.Serialiser;
 import dhbw.navigator.interfaces.IDijkstra;
@@ -20,11 +20,20 @@ import dhbw.navigator.interfaces.ISerialiser;
 import dhbw.navigator.models.Node;
 import dhbw.navigator.start.StartNavigator;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBuilder;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.control.Menu;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 
 /**
  * Controller for RootLayoutWindow.fxml
@@ -53,6 +62,10 @@ public class RootLayoutController {
 
 	@FXML
 	private StackPane primaryStackPane;
+	@FXML
+	private ImageView menuImage;
+	@FXML
+	private Menu menu;
 
 	public StartNavigator getStart() {
 		return start;
@@ -62,10 +75,13 @@ public class RootLayoutController {
 		this.start = start;
 	}
 
-
 	/**
-	 * Load the map data. Data will be parsed form source if serialised data is not avaliable.
-	 * @param parseData Boolean, set true to parse the data from the source again, false to deserialise already parsed data.
+	 * Load the map data. Data will be parsed form source if serialised data is
+	 * not avaliable.
+	 * 
+	 * @param parseData
+	 *            Boolean, set true to parse the data from the source again,
+	 *            false to deserialise already parsed data.
 	 */
 	private void loadData(Boolean parseData) {
 		IParser parser = new Parser2();
@@ -88,19 +104,32 @@ public class RootLayoutController {
 		}
 		startPositionInput.setNamesOfJunctions(namesOfJunctions);
 		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
-		//Set map content
+		// Set map content
 		map.setOriginMap(nodes);
 	}
 
 	@FXML
 	public void initialize() {
-
-
+		// Set Icon of MenuItem
+		menuImage.setImage(new Image("File:resources/images/menuIcon.png"));
+		menu.setGraphic(ButtonBuilder.create().onAction(new EventHandler<ActionEvent>() {
+			// TODO
+			// add
+			// ImageViewBuilder
+			// instead
+			// of
+			// Button
+			// Builder
+			@Override
+			public void handle(ActionEvent t) {
+				handleLoadData();
+			}
+		}).build());
 		Platform.runLater(new Runnable() {
 			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
-				//Muss in anderne Thread ausgelagert werden
+				// Muss in anderne Thread ausgelagert werden
 				Button btn = new Button("<");
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
@@ -112,22 +141,16 @@ public class RootLayoutController {
 				layoutPane.setAlignment(switchButton, Pos.CENTER);
 				Label headerLabel = new Label("Routenwahl");
 				headerLabel.setStyle("h1");
-				flapBar = new SlideBarControle(325, btn,
-						new Label("Routeneingabe"),
-						startPositionInput,
-						layoutPane,
-						destinationPositionInput,
-						originInformation,
-						destinationInformation,
-						pathListing);
+				flapBar = new SlideBarControle(325, btn, new Label("Routeneingabe"), startPositionInput, layoutPane,
+						destinationPositionInput, originInformation, destinationInformation, pathListing);
 
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
 				loadData(false);
 				flapBar.addPropertyChangeListener(isExpanded -> {
-					if((boolean)isExpanded.getNewValue()){
-						 btn.setText("<");
-					}else{
+					if ((boolean) isExpanded.getNewValue()) {
+						btn.setText("<");
+					} else {
 						btn.setText(">");
 					}
 				});
@@ -139,7 +162,6 @@ public class RootLayoutController {
 			destinationPositionInput.setText(startPositionInput.getText());
 			startPositionInput.setText(tmpText);
 		});
-
 
 		// Add PropertyChangeListener to destinationPositionInput controle.
 		destinationPositionInput.addPropertyChangeListener(e -> {
@@ -170,17 +192,17 @@ public class RootLayoutController {
 	/**
 	 * Call when ever the origin or destination node changes.
 	 */
-	void nodeChanged()
-	{
+	void nodeChanged() {
 
-		if(startNode==null && destinationNode ==null) {
-			//TODO
-		}else if(startNode == null) {
-		}else if(destinationNode == null) {
-		}else if(destinationNode == startNode) {
-		}else{
-			System.out.println("Calculate path from \"" + startNode.getName() + "\" to \"" + destinationNode.getName() + "\".");
-			//Start dijkstra
+		if (startNode == null && destinationNode == null) {
+			// TODO
+		} else if (startNode == null) {
+		} else if (destinationNode == null) {
+		} else if (destinationNode == startNode) {
+		} else {
+			System.out.println(
+					"Calculate path from \"" + startNode.getName() + "\" to \"" + destinationNode.getName() + "\".");
+			// Start dijkstra
 			IDijkstra dijkstra = new Dijkstra();
 			ArrayList<Node> path = dijkstra.FindPath(startNode, destinationNode);
 			pathListing.setPath(path);
@@ -194,19 +216,24 @@ public class RootLayoutController {
 	}
 
 	/**
-	 * Check if an property changed event, listening to a string attribute brings a new empty string.
-	 * @param e PropertyChangedEvent, needs to listen to a string attribute!
+	 * Check if an property changed event, listening to a string attribute
+	 * brings a new empty string.
+	 * 
+	 * @param e
+	 *            PropertyChangedEvent, needs to listen to a string attribute!
 	 * @return Boolean if the new string is empty.
 	 */
-	boolean isNewStringEmpty(PropertyChangeEvent e)
-	{
+	boolean isNewStringEmpty(PropertyChangeEvent e) {
 		return e.getNewValue().equals("");
 	}
 
 	/**
 	 * Finds a node in a list of node based on the node name.
-	 * @param name Name of the node to find.
-	 * @param nodes ArrayList<Node> where the node should be found in.
+	 * 
+	 * @param name
+	 *            Name of the node to find.
+	 * @param nodes
+	 *            ArrayList<Node> where the node should be found in.
 	 * @return The first node in the list with the given name.
 	 */
 	private Node getNodeByName(String name, ArrayList<Node> nodes) {
@@ -214,11 +241,11 @@ public class RootLayoutController {
 			if (n.getName().equals(name))
 				return n;
 		}
-		//Return null if the list does not contain the node.
+		// Return null if the list does not contain the node.
 		return null;
 	}
 
-	//Add a node to the center of the view
+	// Add a node to the center of the view
 	public void addToCenter(javafx.scene.Node node) {
 		primaryStackPane.getChildren().add(node);
 	}
@@ -241,7 +268,7 @@ public class RootLayoutController {
 	}
 
 	/**
-	 * Info Alert
+	 * Sync Data, which get parsed in the beginning
 	 */
 	@FXML
 	private void handleSync() {
@@ -250,32 +277,31 @@ public class RootLayoutController {
 		loadData(true);
 	}
 
-
-
-
 	public ArrayList<Node> getNodes() {
 		return nodes;
 	}
 
-
 	/**
 	 * Set attribute nodes.
-	 * @param nodes ArrayList<Node> to set nodes to.
+	 * 
+	 * @param nodes
+	 *            ArrayList<Node> to set nodes to.
 	 */
 	public void setNodes(ArrayList<Node> nodes) {
 		this.nodes = nodes;
 	}
 
-
 	/**
 	 * Set the start node of the serialiseFilePath.
-	 * @param pStartNode Start node.
+	 * 
+	 * @param pStartNode
+	 *            Start node.
 	 */
 	public void setStartNode(Node pStartNode) {
-		this.startNode = pStartNode;
-		if(pStartNode==null){
+		startNode = pStartNode;
+		if (pStartNode == null) {
 			originInformation.clearNode();
-		}else{
+		} else {
 			originInformation.setNode(pStartNode);
 			map.setStart(startNode);
 			System.out.println("Start node set: " + pStartNode.getName());
@@ -285,14 +311,16 @@ public class RootLayoutController {
 	}
 
 	/**
-	 * Set the destinati node of the serialiseFilePath.
-	 * @param pEndNode Destination node
+	 * Set the destination node of the serialiseFilePath.
+	 * 
+	 * @param pEndNode
+	 *            Destination node
 	 */
 	public void setDestinationNode(Node pEndNode) {
-		this.destinationNode = pEndNode;
-		if(pEndNode == null){
+		destinationNode = pEndNode;
+		if (pEndNode == null) {
 			destinationInformation.clearNode();
-		}else{
+		} else {
 			destinationInformation.setNode(pEndNode);
 			map.setDestinationNode(destinationNode);
 			System.out.println("Destination node set: " + pEndNode.getName());
@@ -300,6 +328,15 @@ public class RootLayoutController {
 		}
 	}
 
-
-
+	/**
+	 * Open a FileChooser to select the Data, which will be parsed and draw
+	 */
+	@FXML
+	private void handleLoadData() { // TODO handle event
+		System.out.println("Haöllo");
+		FileChooser fileChooser = new FileChooser();
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Ser files (*.ser)", "*.ser");
+		fileChooser.getExtensionFilters().add(extFilter);
+		File file = fileChooser.showSaveDialog(start.getPrimaryStage());
+	}
 }
