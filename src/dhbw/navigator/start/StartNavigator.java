@@ -6,6 +6,7 @@ import dhbw.navigator.views.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -41,6 +42,9 @@ public class StartNavigator extends Application {
 		// Set Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
+
+		// Set Icon
+		this.primaryStage.getIcons().add(new Image("file:resources/images/icon.jpg"));
 
 		// Load Views
 		rootLayout();
