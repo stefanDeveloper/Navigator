@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import dhbw.navigator.controles.AutoCompleteControle;
+import dhbw.navigator.controles.ImageButtonControle;
 import dhbw.navigator.controles.MapControle;
 import dhbw.navigator.controles.NodeInformationControle;
 import dhbw.navigator.controles.PathListingControle;
@@ -20,15 +21,11 @@ import dhbw.navigator.interfaces.ISerialiser;
 import dhbw.navigator.models.Node;
 import dhbw.navigator.start.StartNavigator;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBuilder;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -42,6 +39,7 @@ import javafx.stage.FileChooser;
  *
  */
 public class RootLayoutController {
+
 	private SlideBarControle flapBar;
 	private AutoCompleteControle startPositionInput = new AutoCompleteControle("Start");
 	private AutoCompleteControle destinationPositionInput = new AutoCompleteControle("Ziel");
@@ -51,15 +49,11 @@ public class RootLayoutController {
 	private NodeInformationControle destinationInformation = new NodeInformationControle(90);
 	private PathListingControle pathListing = new PathListingControle();
 	private MapControle map = new MapControle();
-	Button switchButton = new Button("</>");
-
+	private Button switchButton = new Button("</>");
 	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
 	static private String xmlFilePath = "Testdata/cologne.xml";
-
 	private StartNavigator start;
-
 	private ArrayList<Node> nodes;
-
 	@FXML
 	private StackPane primaryStackPane;
 	@FXML
@@ -110,26 +104,15 @@ public class RootLayoutController {
 
 	@FXML
 	public void initialize() {
-		// Set Icon of MenuItem
-		menuImage.setImage(new Image("File:resources/images/menuIcon.png"));
-		menu.setGraphic(ButtonBuilder.create().onAction(new EventHandler<ActionEvent>() {
-			// TODO
-			// add
-			// ImageViewBuilder
-			// instead
-			// of
-			// Button
-			// Builder
-			@Override
-			public void handle(ActionEvent t) {
-				handleLoadData();
-			}
-		}).build());
+		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png", 30, 30);
+		menu.setGraphic(cont);
+		cont.setOnMouseClicked(event -> handleLoadData());
+
 		Platform.runLater(new Runnable() {
 			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
-				// Muss in anderne Thread ausgelagert werden
+				// TODO Muss in anderne Thread ausgelagert werden
 				Button btn = new Button("<");
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
@@ -331,9 +314,7 @@ public class RootLayoutController {
 	/**
 	 * Open a FileChooser to select the Data, which will be parsed and draw
 	 */
-	@FXML
 	private void handleLoadData() { // TODO handle event
-		System.out.println("Haöllo");
 		FileChooser fileChooser = new FileChooser();
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Ser files (*.ser)", "*.ser");
 		fileChooser.getExtensionFilters().add(extFilter);

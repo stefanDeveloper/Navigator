@@ -12,9 +12,6 @@
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
             <Menu mnemonicParsing="false" fx:id="menu" >
-               <graphic>
-                  <ImageView fx:id="menuImage" fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
-               </graphic>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
