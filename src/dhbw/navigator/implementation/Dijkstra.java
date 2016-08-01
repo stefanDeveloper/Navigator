@@ -25,7 +25,8 @@ public class Dijkstra implements IDijkstra {
 	public ArrayList<Node> FindPath(Node start, Node end) {
 		this.visited = new ArrayList<>();
 		this.toVisit = new ArrayList<>();
-		this.initialize(start);
+		this.initialize(start); //Reset all nodes
+		//Start algorithm with start node
 		this.toVisit.add(start);
 		start.setShortestDistance(0);
 
@@ -33,14 +34,14 @@ public class Dijkstra implements IDijkstra {
 			this.visit(this.toVisit.get(0));
 			this.visited.add(this.toVisit.get(0));
 			this.toVisit.remove(0);
-
 			Collections.sort(this.toVisit, new Comparator<Node>() {
 				@Override
 				public int compare(Node way2, Node way1) {
 
-					return ((Float) way1.getShortestDistance()).compareTo(way2.getShortestDistance());
+					return ((Float) way2.getShortestDistance()).compareTo(way1.getShortestDistance());
 				}
 			});
+			System.out.println();
 		}
 
 		ArrayList<Node> result = new ArrayList<>();
@@ -68,7 +69,9 @@ public class Dijkstra implements IDijkstra {
 	}
 
 	private void visit(Node start) {
-
+		if(start.getName() != null && start.getName().equals("Mönchengladbach-Nordpark")) {
+			System.out.print("Test");
+		}
 		for (Edge e : start.getEdges()) {
 			Node n = e.getNeighbour(start);
 			if (!visited.contains(n)) {

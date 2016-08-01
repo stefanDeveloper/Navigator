@@ -2,17 +2,20 @@ package dhbw.navigator.controles;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Stack;
 
+import com.sun.rowset.internal.Row;
 import dhbw.navigator.models.Edge;
 import dhbw.navigator.models.Node;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -37,23 +40,24 @@ public class MapControle extends StackPane {
 	private Canvas destinatinMarkLayer = new Canvas();
 
 	// upper left
-	private double zoom = 0;
+	private double zoom = 1;
 	private double xOffset = 0;
 	private double yOffset = 0;
 	private double xSize = 0;
 	private double ySize = 0;
-	private BigDecimal lon2;
-	private BigDecimal lat2;
-	private BigDecimal lat1;
-	private BigDecimal lon1;
+	private double lat1;
+	private double lon1;
 	private double xMulti;
 	private double yMulti;
 
 	public MapControle()
 	{
 		//Add mapLayer (map) and pathLayer (path)
-		getChildren().addAll(mapLayer, startMarkLayer, destinatinMarkLayer, pathLayer);
-
+		getChildren().addAll(mapLayer,
+				startMarkLayer,
+				destinatinMarkLayer,
+				pathLayer
+		);
 		//Set default values for the layer
 		pathLayer.getGraphicsContext2D().setStroke(Color.AQUA);
 		pathLayer.getGraphicsContext2D().setLineWidth(3);
@@ -92,6 +96,40 @@ public class MapControle extends StackPane {
 			}
 		});
 	}
+
+
+
+	private int movement = 25;
+
+	public void moveLeft(){
+		xOffset += movement;
+		updateGraph();
+	}
+
+	public void moveRight(){
+		xOffset -= movement;
+		updateGraph();
+	}
+
+	public void moveDown(){
+		yOffset -= movement;
+		updateGraph();
+	}
+
+	public void moveUp(){
+		yOffset += movement;
+		updateGraph();
+	}
+
+	public void zoomIn(){
+		zoom += 0.1;
+		updateGraph();
+	}
+
+	public void zoomOut(){
+		zoom -= 0.1;
+		updateGraph();
+	}
 	
 	public void setPath(ArrayList<Node> pPathList){
 		pathList = pPathList;
@@ -116,6 +154,10 @@ public class MapControle extends StackPane {
 	//Update the graph
 	//Calculate how to scale the map
 	void updateGraph() {
+
+		double lon2;
+		double lat2;
+
 		if (this.parent != null && nodeList!=null) {
 			this.xSize = this.parent.getWidth();
 			this.ySize = this.parent.getHeight();
@@ -128,35 +170,34 @@ public class MapControle extends StackPane {
 			Node firstNode = this.nodeList.get(0);
 
 
-			lat1 = firstNode.getLat();
-			lon1 = firstNode.getLon();
+			lat1 = firstNode.getLat().doubleValue();
+			lon1 = firstNode.getLon().doubleValue();
 			// lower right
 
-			lon2 = firstNode.getLon();
+			lon2 = firstNode.getLon().doubleValue();
 
-			lat2 = firstNode.getLat();
+			lat2 = firstNode.getLat().doubleValue();
 
-			BigDecimal compareLat;
-			BigDecimal compareLon;
+			double compareLat;
+			double compareLon;
 			//Get the highest left and lowest right coordinate
 			for (Node n : this.nodeList) {
-				compareLat = n.getLat();
-				compareLon = n.getLon();
-				if (compareLat.compareTo(lat1) == -1)
+				compareLat = n.getLat().doubleValue();
+				compareLon = n.getLon().doubleValue();
+				if (compareLat < lat1)
 					lat1 = compareLat; // compare is smaller
-				if (compareLon.compareTo(lon1) == 1)
+				if (compareLon> lon1)
 					lon1 = compareLon; // compare is smaller
 
-				if (compareLat.compareTo(lat2) == 1)
+				if (compareLat > lat2)
 					lat2 = compareLat; // Compare is greater
-				if (compareLon.compareTo(lon2) == -1)
+				if (compareLon < lon2)
 					lon2 = compareLon; // compare is greater
 			}
 			//Calculate the relation between X and Y
 			//and calculate the strechting factor to fit the window
-			double latDif = lat2.subtract(lat1).doubleValue(); // Breitenunterschied
-			double lonDif = lon2.subtract(lon1).doubleValue(); // Höhenunterschied
-
+			double latDif = lat2 - lat1; // Breitenunterschied
+			double lonDif = lon2 - lon1; // Höhenunterschied
 
 
 			xMulti = -(-this.xSize / lonDif);
@@ -168,6 +209,8 @@ public class MapControle extends StackPane {
 				multi = xMulti;
 			}
 
+			xMulti = xMulti * zoom;
+			yMulti = yMulti * zoom;
 
 			clearAndResizeAllLayer(mapLayer, pathLayer, startMarkLayer, destinatinMarkLayer);
 			drawLines(nodeList,
@@ -200,8 +243,8 @@ public class MapControle extends StackPane {
 	{
 		if(n!=null){
 			double highlightDiameter = diameter * 1.5;
-			double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
-			double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+			double nLon = calculateX(n.getLon().doubleValue());
+			double nLat = calculateY(n.getLat().doubleValue());
 			layer.getGraphicsContext2D().fillOval(nLon - highlightDiameter / 2,
 					nLat - highlightDiameter / 2, highlightDiameter,
 					highlightDiameter);
@@ -218,16 +261,16 @@ public class MapControle extends StackPane {
 		
 		//Draw all edges
 		for (Node n : nodes) {
-			double nLat = n.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-			double nLon = lon1.subtract(n.getLon()).doubleValue() * xMulti + this.xSize;
-			graphic.fillText(n.getName() + " "+n.getShortestDistance(), nLon + 15, nLat);
+			double nLon = calculateX(n.getLon().doubleValue());
+			double nLat = calculateY(n.getLat().doubleValue());
 
-			if(!highlightPath && -xMulti > 350){
+			if(!highlightPath && -xMulti > 550){
 				if(n.getJunctionsCount()>2||-xMulti > 450) //graphic.fillText(n.getName(), nLon + 15, nLat);
 				graphic.fillOval(nLon - diameter / 2,
 						nLat - diameter / 2,
 						diameter,
 						diameter);
+				graphic.fillText(n.getName() + " "+n.getShortestDistance(), nLon + 15, nLat);
 			}
 
 
@@ -248,14 +291,22 @@ public class MapControle extends StackPane {
 					for (int i = 0; i < allNodes.size() - 1; i++) {
 						Node en = allNodes.get(i);
 						Node enNext = allNodes.get(i + 1);
-						double lo1 = lon1.subtract(en.getLon()).doubleValue() * xMulti + this.xSize;
-						double la1 = en.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
-						double lo2 = lon1.subtract(enNext.getLon()).doubleValue() * xMulti + this.xSize;
-						double la2 = enNext.getLat().subtract(lat1).doubleValue() * yMulti + this.ySize;
+						double lo1 = calculateX(en.getLon().doubleValue());
+						double la1 = calculateY(en.getLat().doubleValue());
+						double lo2 = calculateX(enNext.getLon().doubleValue());
+						double la2 = calculateY(enNext.getLat().doubleValue());
 						graphic.strokeLine(lo2, la2, lo1, la1);
 					}
 				}
 			}
 		}
+	}
+
+	double calculateX(double input){
+		return (lon1 -input) * xMulti + this.xSize + xOffset;
+	}
+
+	double calculateY(double input){
+		return (input - lat1) * yMulti + this.ySize + yOffset;
 	}
 }
