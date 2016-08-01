@@ -1,2 +1,5 @@
 /bin/
 /src/dhbw.navigator/secrets
+/out/
+/data/*.xml
+/resources/weatherIcons/*.png
