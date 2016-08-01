@@ -232,6 +232,17 @@ public class Parser2 implements IParser {
             }
         }
 
+        for(Node n: existingNodes){
+            for (int i = 0; i < n.getEdges().size(); i++) {
+                Edge e = n.getEdges().get(i);
+                if(e.getStartNode().equals(e.getEndNode()))
+                {
+                    n.getEdges().remove(i);
+                    i--;
+                }
+            }
+        }
+
         System.out.println("Extracting edges finished.");
         return existingNodes;
     }

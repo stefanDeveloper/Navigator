@@ -4,11 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.*;
 
-import dhbw.navigator.controles.AutoCompleteControle;
-import dhbw.navigator.controles.MapControle;
-import dhbw.navigator.controles.NodeInformationControle;
-import dhbw.navigator.controles.PathListingControle;
-import dhbw.navigator.controles.SlideBarControle;
+import dhbw.navigator.controles.*;
 import dhbw.navigator.generated.Osm;
 import dhbw.navigator.implementation.Dijkstra;
 import dhbw.navigator.implementation.Parser;
@@ -45,7 +41,7 @@ public class RootLayoutController {
 	Button switchButton = new Button("</>");
 
 	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
-	static private String xmlFilePath = "Testdata/cologne.xml";
+	static private String xmlFilePath = "Testdata/germany.xml";
 
 	private StartNavigator start;
 
@@ -88,6 +84,7 @@ public class RootLayoutController {
 		}
 		startPositionInput.setNamesOfJunctions(namesOfJunctions);
 		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
+		Node n = getNodeByName("Mönchengladbach-Nordpark", nodes);
 		//Set map content
 		map.setOriginMap(nodes);
 	}
@@ -105,8 +102,12 @@ public class RootLayoutController {
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
 				primaryStackPane.setAlignment(btn, Pos.CENTER_LEFT);
+				NavigationControle navigationControle = new NavigationControle(map);
+				primaryStackPane.setAlignment(navigationControle, Pos.BOTTOM_RIGHT);
+
 				addToCenter(map);
 				addToCenter(btn);
+				addToCenter(navigationControle);
 				BorderPane layoutPane = new BorderPane();
 				layoutPane.setCenter(switchButton);
 				layoutPane.setAlignment(switchButton, Pos.CENTER);
