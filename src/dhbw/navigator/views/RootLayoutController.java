@@ -51,7 +51,7 @@ public class RootLayoutController {
 	Button switchButton = new Button("</>");
 
 	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
-	static private String xmlFilePath = "Testdata/germany.xml";
+	static private String xmlFilePath = "resources/data/germany.xml";
 
 	private StartNavigator start;
 
@@ -114,7 +114,7 @@ public class RootLayoutController {
 			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
-				// Muss in anderne Thread ausgelagert werden
+				// TODO Muss in anderne Thread ausgelagert werden
 				Button btn = new Button("<");
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
@@ -122,6 +122,7 @@ public class RootLayoutController {
 				NavigationControle navigationControle = new NavigationControle(map);
 				primaryStackPane.setAlignment(navigationControle, Pos.BOTTOM_RIGHT);
 
+				// TODO overlay the btn for the sidebar
 				addToCenter(map);
 				addToCenter(btn);
 				addToCenter(navigationControle);
@@ -135,7 +136,7 @@ public class RootLayoutController {
 
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
-				loadData(false);
+				loadData(true);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
 						btn.setText("<");
@@ -253,7 +254,7 @@ public class RootLayoutController {
 	@FXML
 	private void handleInfo() {
 		UtilityViews.Information("Navigator \n" + "Gruppenprojekt Programmieren\n" + "2. Semester\n"
-				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad M�ller");
+				+ "Manuela Leopold\n" + "Markus Menrath\n" + "Stefan Machmeier\n" + "Konrad Müller");
 	}
 
 	/**
@@ -320,11 +321,11 @@ public class RootLayoutController {
 	/**
 	 * Open a FileChooser to select the Data, which will be parsed and draw
 	 */
-
 	@FXML
 	private void handleLoadData() { // TODO handle event
+		// Add FileChooser
 		FileChooser fileChooser = new FileChooser();
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Ser files (*.ser)", "*.ser");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Xml files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
 		File file = fileChooser.showSaveDialog(start.getPrimaryStage());
 
