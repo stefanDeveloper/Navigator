@@ -136,7 +136,7 @@ public class RootLayoutController {
 
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
-				loadData(true);
+				loadData(false);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
 						btn.setText("<");
