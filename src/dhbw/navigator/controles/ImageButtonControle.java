@@ -25,8 +25,11 @@ public class ImageButtonControle extends Button {
 		image.setFitWidth(width);
 		// Set Graphic of Button
 		setGraphic(image);
+		//Set min max Size,image fit to the button
+		setMinSize(width, height);
+		setMaxSize(width, height);
+		
 		setStyle(STYLE_NORMAL);
-		// TODO Release after Button pressed
 		setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {

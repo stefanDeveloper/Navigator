@@ -27,6 +27,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -106,9 +107,13 @@ public class RootLayoutController {
 
 	@FXML
 	public void initialize() {
-		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png", 30, 30);
+		//Set ImageButton 
+		ImageButtonControle cont = new ImageButtonControle("File:resources/images/fd.png", 40, 39);
+		//Set Graphic to Menu
 		menu.setGraphic(cont);
+		//Handle Click and show Tooltip
 		cont.setOnMouseClicked(event -> handleLoadData());
+		cont.setTooltip(new Tooltip("Lade Datei"));
 
 		Platform.runLater(new Runnable() {
 			@SuppressWarnings("static-access")
@@ -136,6 +141,8 @@ public class RootLayoutController {
 
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
+				File file = new File(serialiseFilePath);
+				if (file.exists())
 				loadData(false);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
@@ -327,7 +334,7 @@ public class RootLayoutController {
 		FileChooser fileChooser = new FileChooser();
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Xml files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
-		File file = fileChooser.showSaveDialog(start.getPrimaryStage());
+		File file = fileChooser.showOpenDialog(start.getPrimaryStage());
 
 	}
 
