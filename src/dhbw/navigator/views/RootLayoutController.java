@@ -50,18 +50,16 @@ public class RootLayoutController {
 	private PathListingControle pathListing = new PathListingControle();
 	private MapControle map = new MapControle();
 	Button switchButton = new Button("</>");
-
-	static private String serialiseFilePath = System.getProperty("user.home") + "\\desktop\\map.ser";
+	static private String serialiseFilePath = "resources/serializeData/map.ser";
 	static private String xmlFilePath = "resources/data/germany.xml";
-
 	private StartNavigator start;
-
 	private ArrayList<Node> nodes;
-
 	@FXML
 	private StackPane primaryStackPane;
 	@FXML
-	private Menu menu;
+	private Menu loadFile;
+	@FXML
+	private Menu help;
 
 	public StartNavigator getStart() {
 		return start;
@@ -79,7 +77,7 @@ public class RootLayoutController {
 	 *            Boolean, set true to parse the data from the source again,
 	 *            false to deserialise already parsed data.
 	 */
-	private void loadData(Boolean parseData) {
+	private void loadData(Boolean parseData) { 
 		IParser parser = new Parser2();
 		ISerialiser serialiser = new Serialiser();
 		// Set default location
@@ -108,13 +106,14 @@ public class RootLayoutController {
 	@FXML
 	public void initialize() {
 		//Set ImageButton 
-		ImageButtonControle cont = new ImageButtonControle("File:resources/images/fd.png", 40, 39);
+		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png", 40, 39);
 		//Set Graphic to Menu
-		menu.setGraphic(cont);
+		loadFile.setGraphic(cont);
 		//Handle Click and show Tooltip
 		cont.setOnMouseClicked(event -> handleLoadData());
 		cont.setTooltip(new Tooltip("Lade Datei"));
-
+		//Set ID
+		help.setId("help");
 		Platform.runLater(new Runnable() {
 			@SuppressWarnings("static-access")
 			@Override
@@ -130,7 +129,7 @@ public class RootLayoutController {
 				// TODO overlay the btn for the sidebar
 				addToCenter(map);
 				addToCenter(btn);
-				addToCenter(navigationControle);
+				//addToCenter(navigationControle);
 				BorderPane layoutPane = new BorderPane();
 				layoutPane.setCenter(switchButton);
 				layoutPane.setAlignment(switchButton, Pos.CENTER);
@@ -138,12 +137,12 @@ public class RootLayoutController {
 				headerLabel.setStyle("h1");
 				flapBar = new SlideBarControle(325, btn, new Label("Routeneingabe"), startPositionInput, layoutPane,
 						destinationPositionInput, originInformation, destinationInformation, pathListing);
-
+				flapBar.setId("flapBar");
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
 				File file = new File(serialiseFilePath);
-				if (file.exists())
-				loadData(false);
+				if (!file.exists())
+				loadData(true);
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
 						btn.setText("<");

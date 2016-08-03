@@ -42,6 +42,10 @@ public class StartNavigator extends Application {
 		// Set Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
+		
+		//Set StyleSheet
+		setUserAgentStylesheet(STYLESHEET_MODENA);
+		
 
 		// Set Icon
 		this.primaryStage.getIcons().add(new Image("file:resources/images/icon.jpg"));
@@ -64,7 +68,8 @@ public class StartNavigator extends Application {
 			// Set controller
 			root = loader.getController();
 			root.setStart(this);
-
+			//Set StyleSheet
+			primaryBorder.getStylesheets().add("dhbw/navigator/views/application.css");
 			// Set scene to primary stage (window)
 			Scene scene = new Scene(primaryBorder);
 			primaryStage.setScene(scene);
