@@ -18,16 +18,11 @@ public class ImageButtonControle extends Button {
 	 * @param height
 	 * @param width
 	 */
-	public ImageButtonControle(String imageurl, double height, double width) {
+	public ImageButtonControle(String imageurl) {
 		// Set ImageView
 		ImageView image = new ImageView(new Image(imageurl));
-		image.setFitHeight(height);
-		image.setFitWidth(width);
 		// Set Graphic of Button
 		setGraphic(image);
-		//Set min max Size,image fit to the button
-		setMinSize(width, height);
-		setMaxSize(width, height);
 		
 		setStyle(STYLE_NORMAL);
 		setOnMousePressed(new EventHandler<MouseEvent>() {

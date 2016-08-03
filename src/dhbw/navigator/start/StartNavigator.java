@@ -38,21 +38,15 @@ public class StartNavigator extends Application {
 		// Initialize Stage
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Navigator");
-
 		// Set Size
 		this.primaryStage.setMinHeight(720);
 		this.primaryStage.setMinWidth(680);
-		
 		//Set StyleSheet
 		setUserAgentStylesheet(STYLESHEET_MODENA);
-		
-
 		// Set Icon
-		this.primaryStage.getIcons().add(new Image("file:resources/images/icon.jpg"));
-
+		this.primaryStage.getIcons().add(new Image("file:resources/images/map.png"));
 		// Load Views
 		rootLayout();
-
 	}
 
 	/**

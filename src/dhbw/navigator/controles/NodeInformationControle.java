@@ -3,6 +3,7 @@ package dhbw.navigator.controles;
 import java.text.DecimalFormat;
 
 import dhbw.navigator.models.Node;
+import dhbw.navigator.views.UtilityViews;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -102,7 +103,7 @@ public class NodeInformationControle extends VBox {
             }
             else{
             	//TODO Add alert
-                System.out.println("Request failed, respond code: " + weather.getResponseCode());
+                UtilityViews.Error("Request failed, respond code: " + weather.getResponseCode());
             }
         }
 
