@@ -19,10 +19,8 @@ public class ImageButtonControle extends Button {
 	 * @param width
 	 */
 	public ImageButtonControle(String imageurl) {
-		// Set ImageView
-		ImageView image = new ImageView(new Image(imageurl));
 		// Set Graphic of Button
-		setGraphic(image);
+		setGraphic( new ImageView(new Image(imageurl)));
 		
 		setStyle(STYLE_NORMAL);
 		setOnMousePressed(new EventHandler<MouseEvent>() {

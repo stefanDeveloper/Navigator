@@ -28,6 +28,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -51,7 +53,7 @@ public class RootLayoutController {
 	private MapControle map = new MapControle();
 	Button switchButton = new Button("</>");
 	static private String serialiseFilePath = "resources/serializeData/map.ser";
-	static private String xmlFilePath = "resources/data/germany.xml";
+	static private String xmlFilePath = "resources/data/export.xml";
 	private StartNavigator start;
 	private ArrayList<Node> nodes;
 	@FXML
@@ -60,7 +62,7 @@ public class RootLayoutController {
 	private Menu loadFile;
 	@FXML
 	private Menu help;
-
+	
 	public StartNavigator getStart() {
 		return start;
 	}
@@ -68,64 +70,26 @@ public class RootLayoutController {
 	public void setStart(StartNavigator start) {
 		this.start = start;
 	}
-
-	/**
-	 * Load the map data. Data will be parsed form source if serialised data is
-	 * not avaliable.
-	 * 
-	 * @param parseData
-	 *            Boolean, set true to parse the data from the source again,
-	 *            false to deserialise already parsed data.
-	 */
- class loadData extends Thread{
-	public void bb(Boolean parseData) { 
-		IParser parser = new Parser2();
-		ISerialiser serialiser = new Serialiser();
-		// Set default location
-
-		// Check boolean
-		if (parseData) {
-			// Parse file and serialize it
-			nodes = parser.getNodes(xmlFilePath);
-			serialiser.serialize(nodes, serialiseFilePath);
-		} else {
-			nodes = serialiser.deserialize(serialiseFilePath);
-		}
-		SortedSet<String> namesOfJunctions = new TreeSet<>();
-		for (Node n : nodes) {
-			if (n.getIsJunction())
-				// Add names of Junction for Context Menu
-				namesOfJunctions.add(n.getName());
-		}
-		startPositionInput.setNamesOfJunctions(namesOfJunctions);
-		destinationPositionInput.setNamesOfJunctions(namesOfJunctions);
-		Node n = getNodeByName("Mönchengladbach-Nordpark", nodes);
-		// Set map content
-		map.setOriginMap(nodes);
-	}
-	
-	public void run(){
-		bb(true);
-	}
-}
-
 	@FXML
 	public void initialize() {
 		//Set ImageButton 
-		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png");
+		ImageButtonControle cont = new ImageButtonControle("File:resources/images/a.png");
+		help.setGraphic(new ImageView(new Image("File:resources/images/info.png")));
 		//Set Graphic to Menu
 		loadFile.setGraphic(cont);
 		//Handle Click and show Tooltip
 		cont.setOnMouseClicked(event -> handleLoadData());
+		//Set Tooltip
 		cont.setTooltip(new Tooltip("Lade Datei"));
 		//Set ID
 		help.setId("help");
+		cont.setId("cont");
 		Platform.runLater(new Runnable() {
 			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
 				switchButton.setTooltip(new Tooltip("Vertauschen"));
-				// TODO Muss in anderne Thread ausgelagert werden
+				// TODO eigene Methode
 				Button btn = new Button("<");
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
@@ -133,11 +97,10 @@ public class RootLayoutController {
 				primaryStackPane.setAlignment(btn, Pos.CENTER_LEFT);
 				NavigationControle navigationControle = new NavigationControle(map);
 				primaryStackPane.setAlignment(navigationControle, Pos.BOTTOM_RIGHT);
-
-				// TODO overlay the btn for the sidebar
+				navigationControle.setStyle("fx-background-color: red");
 				addToCenter(map);
+				addToCenter(navigationControle);
 				addToCenter(btn);
-				//addToCenter(navigationControle);
 				BorderPane layoutPane = new BorderPane();
 				layoutPane.setCenter(switchButton);
 				layoutPane.setAlignment(switchButton, Pos.CENTER);
@@ -150,7 +113,7 @@ public class RootLayoutController {
 				btn.fire();
 				File file = new File(serialiseFilePath);
 				if (!file.exists()){
-					new loadData().start();
+					//TODO loadData
 				}
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
@@ -345,6 +308,7 @@ public class RootLayoutController {
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Xml files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
 		File file = fileChooser.showOpenDialog(start.getPrimaryStage());
+		String path = file.getPath();
 
 	}
 
