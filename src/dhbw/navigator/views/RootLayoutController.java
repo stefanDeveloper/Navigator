@@ -77,7 +77,8 @@ public class RootLayoutController {
 	 *            Boolean, set true to parse the data from the source again,
 	 *            false to deserialise already parsed data.
 	 */
-	private void loadData(Boolean parseData) { 
+ class loadData extends Thread{
+	public void bb(Boolean parseData) { 
 		IParser parser = new Parser2();
 		ISerialiser serialiser = new Serialiser();
 		// Set default location
@@ -102,11 +103,16 @@ public class RootLayoutController {
 		// Set map content
 		map.setOriginMap(nodes);
 	}
+	
+	public void run(){
+		bb(true);
+	}
+}
 
 	@FXML
 	public void initialize() {
 		//Set ImageButton 
-		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png", 40, 39);
+		ImageButtonControle cont = new ImageButtonControle("File:resources/images/menuIcon.png");
 		//Set Graphic to Menu
 		loadFile.setGraphic(cont);
 		//Handle Click and show Tooltip
@@ -118,10 +124,12 @@ public class RootLayoutController {
 			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
+				switchButton.setTooltip(new Tooltip("Vertauschen"));
 				// TODO Muss in anderne Thread ausgelagert werden
 				Button btn = new Button("<");
 				btn.setPrefHeight(80);
 				btn.setBorder(Border.EMPTY);
+				btn.setTooltip(new Tooltip("Einfahren"));
 				primaryStackPane.setAlignment(btn, Pos.CENTER_LEFT);
 				NavigationControle navigationControle = new NavigationControle(map);
 				primaryStackPane.setAlignment(navigationControle, Pos.BOTTOM_RIGHT);
@@ -141,13 +149,16 @@ public class RootLayoutController {
 				start.getPrimaryBorder().setLeft(flapBar);
 				btn.fire();
 				File file = new File(serialiseFilePath);
-				if (!file.exists())
-				loadData(true);
+				if (!file.exists()){
+					new loadData().start();
+				}
 				flapBar.addPropertyChangeListener(isExpanded -> {
 					if ((boolean) isExpanded.getNewValue()) {
 						btn.setText("<");
+						btn.setTooltip(new Tooltip("Einfahren"));
 					} else {
 						btn.setText(">");
+						btn.setTooltip(new Tooltip("Ausfahren"));
 					}
 				});
 			}
@@ -270,7 +281,7 @@ public class RootLayoutController {
 	private void handleSync() {
 		setStartNode(null);
 		setDestinationNode(null);
-		loadData(true);
+		//loadData(true);
 	}
 
 	public ArrayList<Node> getNodes() {

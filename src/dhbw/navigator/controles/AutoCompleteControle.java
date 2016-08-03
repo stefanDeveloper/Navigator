@@ -16,6 +16,7 @@ import java.util.SortedSet;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
@@ -33,7 +34,8 @@ public class AutoCompleteControle extends GridPane {
 		textField = new TextFieldAutoCompleteControle();
 		clearButton.setVisible(false);
 		setPadding(new Insets(5, 0, 0, 5));
-
+		//Set ToolTip
+		clearButton.setTooltip(new Tooltip("Lösche"));
 		// Create four columns for the controls
 		for (int i = 0; i < 4; i++) {
 			ColumnConstraints col = new ColumnConstraints();
