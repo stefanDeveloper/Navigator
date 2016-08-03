@@ -13,7 +13,7 @@
         <menus>
             <Menu mnemonicParsing="false" fx:id="loadFile" >
             </Menu>
-          <Menu mnemonicParsing="false" text="Help" fx:id="help">
+          <Menu mnemonicParsing="false" fx:id="help">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleInfo" text="Info" />
                   <SeparatorMenuItem mnemonicParsing="false" />

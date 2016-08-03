@@ -78,13 +78,13 @@
 }
 #help{
 	-fx-alignment: center;
+	-fx-padding: 10 10 10 10;
 }
 #help .context-menu{
 	-fx-background-color: derive(#1d1d1d,50%);
 }
-
-#flapbar .right-container{
-	-fx-border-style: solid;
-	-fx-border-width: 2;
-	-fx-border-color: black; 
+#cont {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-insets: -1.4, 0, 1, 2;
 }
