@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="dev.jnlp">
+  <information>
+    <title>dev</title>
+    <vendor>de.dhbw.navigator</vendor>
+    <description>Navigator</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="dev.jar" size="81196" download="eager" />
+    <jar href="libs\guava-19.0.jar" size="2308517" download="eager" />
+    <jar href="libs\junit.jar" size="314932" download="eager" />
+    <jar href="libs\org.hamcrest.core_1.3.0.v201303031735.jar" size="55198" download="eager" />
+    <jar href="libs\owm-japis-2.5.0.3.jar" size="80276" download="eager" />
+    <jar href="libs\testFx-3.1.2.jar" size="63667" download="eager" />
+    <jar href="libs\testfx-core-4.0.0-20150226.214553-8.jar" size="107334" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="de.dhbw.navigator.start.StartNavigator"  name="Navigator" />
+  <update check="background"/>
+</jnlp>

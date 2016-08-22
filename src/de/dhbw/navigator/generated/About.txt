@@ -1,0 +1,4 @@
+In diesem Ordner liegen automatisch generierte Objekte zum einlesen der XML-Datei.
+
+Die Dateien wurden durch jaxb-ri generiert.
+Siehe mehr unter https://jaxb.java.net/
